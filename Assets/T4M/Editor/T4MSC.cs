@@ -2511,27 +2511,27 @@ public class T4MSC : EditorWindow {
 							IniNewSelect();
 						}
 						
-				EditorGUILayout.EndHorizontal();
+					EditorGUILayout.EndHorizontal();
 				
 				
-				string AssetName= AssetDatabase.GetAssetPath(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural)) as string;
+					string AssetName= AssetDatabase.GetAssetPath(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural)) as string;
 
-				Substance.Game.Substance substance = AssetDatabase.LoadAssetAtPath(AssetName, typeof(Substance.Game.Substance)) as Substance.Game.Substance;
-				if (substance)
-                {
+					Substance.Game.Substance substance = AssetDatabase.LoadAssetAtPath(AssetName, typeof(Substance.Game.Substance)) as Substance.Game.Substance;
+					if (substance)
+					{
 					
-				 	List<SubstanceGraph> ProcMat = substance.graphs as List<SubstanceGraph>;
+				 		List<SubstanceGraph> ProcMat = substance.graphs as List<SubstanceGraph>;
 					
-					for (int i = 0; i<ProcMat.Count;i++){
-						if (ProcMat[i].name+"_Diffuse" == CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural).name){
-							Precedural = ProcMat[i];
-							//SubstanceI.SetTextureAlphaSource(Precedural, Precedural.name+"_Diffuse", ProceduralOutputType.Diffuse);
+						for (int i = 0; i<ProcMat.Count;i++){
+							if (ProcMat[i].name+"_Diffuse" == CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural).name){
+								Precedural = ProcMat[i];
+								//SubstanceI.SetTextureAlphaSource(Precedural, Precedural.name+"_Diffuse", ProceduralOutputType.Diffuse);
+							}
 						}
-					}
-				}else Precedural = null;
+					}else Precedural = null;
 				
-				EditorGUILayout.Space();
-				EditorGUILayout.Space();
+					EditorGUILayout.Space();
+					EditorGUILayout.Space();
 				
 				
 					MaterialTyp =(MaterialType) EditorGUILayout.EnumPopup ("Material Type", MaterialTyp, GUILayout.Width(340));
@@ -2542,35 +2542,39 @@ public class T4MSC : EditorWindow {
 						MaterialAdd = null;
 						PreceduralAdd = EditorGUILayout.ObjectField(PreceduralAdd, typeof(SubstanceGraph),true, GUILayout.Width(220)) as SubstanceGraph;
 					}
-					else{ 
+					else
+					{ 
 						GUILayout.Label("Texture To Add : ");
 						PreceduralAdd = null;
 						MaterialAdd = EditorGUILayout.ObjectField(MaterialAdd, typeof(Texture2D),true, GUILayout.Width(220)) as Texture;
-				}
+					}
+
 				
+					GUILayout.FlexibleSpace();
+					EditorGUILayout.EndVertical();
+					EditorGUILayout.Space();
+					EditorGUILayout.EndHorizontal();
+					EditorGUILayout.Space();
+					if(GUILayout.Button("Make Albedo Atlas",  GUILayout.Height(25)))
+                    {
+
+                    }	                
 				
-				GUILayout.FlexibleSpace();
+					EditorGUILayout.Space();
 				
-				EditorGUILayout.EndVertical();
-				EditorGUILayout.Space();
-				EditorGUILayout.EndHorizontal();
-				
-				EditorGUILayout.Space();
-				
-				if (Precedural){
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					EditorGUILayout.BeginHorizontal("box");
-						GUILayout.FlexibleSpace();
-							scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width (350), GUILayout.Height (296));
-							Substance();
-							EditorGUILayout.EndScrollView();
-						GUILayout.FlexibleSpace();
-					 EditorGUILayout.EndHorizontal();
-				}else{
-					
-					ClassicMat();	
-					
-				}
+					if (Precedural)
+					{
+						GUILayout.Label("Modify" , EditorStyles.boldLabel);
+						EditorGUILayout.BeginHorizontal("box");
+							GUILayout.FlexibleSpace();
+								scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width (350), GUILayout.Height (296));
+								Substance();
+								EditorGUILayout.EndScrollView();
+							GUILayout.FlexibleSpace();
+						 EditorGUILayout.EndHorizontal();
+					}
+					else
+						ClassicMat();	
 				}
 				break;
 				

@@ -48,7 +48,6 @@ SubShader {
         {
 
             //在T4MSC.cs中设置了_Tiling来决定纹理重复的密度
-
         	float2 uv = float2(i.uv2.x *_Tiling.x,i.uv2.y *_Tiling.y);
         	half4 col =tex2D(_MainTex, UNITY_PROJ_COORD(uv));//tex2D(_MainTex, i.uv1.xy);
 

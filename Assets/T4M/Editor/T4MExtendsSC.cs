@@ -36,14 +36,13 @@ public class T4MExtendsSC : Editor {
 	static bool Play;
 	
 	void OnSceneGUI  () {
-		//选择绘制纹理
+		//Draw Texture
 		if (T4MSC.T4MPreview && T4MSC.T4MMenuToolbar == 3)
 			Painter();
-		//选择绘制树木
+		//Draw the vegetation
 		else if (T4MSC.T4MMenuToolbar == 4)
 			Planting ();
 		else State = 3;
-		
 		if (oldState != State || !PlantObjPreview && T4MSC.T4MMenuToolbar == 4 ||T4MSC.T4MObjectPlant[T4MSC.T4MPlantSel] == null && T4MSC.T4MMenuToolbar == 4){
 			
 			MeshRenderer[] prev = GameObject.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
@@ -114,7 +113,6 @@ public class T4MExtendsSC : Editor {
 
 				//这段是显示画笔用的
 
-				//Handles.DrawSolidDisc(raycastHit.point, raycastHit.normal, T4MSC.T4MPreview.orthographicSize * 0.9f);
 
 				// 三种画笔形式
 				if (T4MSC.PaintPrev == T4MSC.PaintHandle.Follow_Normal_Circle){
