@@ -167,8 +167,7 @@ namespace Utility
                 {
                     colors.Add(((Texture2D)myMaterial.GetTexture(tmp)).GetPixels());
                     MySplat[i] = new Texture2D (512, 512,  TextureFormat.ARGB32, true);
-                    MySplat[i].SetPixels(((Texture2D)myMaterial.GetTexture(tmp)).GetPixels());
-                    MySplat[i].
+                    MySplat[i] = (Texture2D)myMaterial.GetTexture(tmp);
                     File.WriteAllBytes(Application.dataPath+"/"+ tmp +".png",MySplat[i].EncodeToPNG());
                 }
                 else
