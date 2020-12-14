@@ -2412,7 +2412,7 @@ public class T4MSC : EditorWindow {
 					GUILayout.FlexibleSpace();
 				GUILayout.EndHorizontal();
 
-				//这段是画笔
+				//这段是添加纹理
 				GUILayout.Label("Add / Replace / Substances Update" , EditorStyles.boldLabel);
 					EditorGUILayout.BeginVertical("box");
 					EditorGUILayout.BeginHorizontal();
@@ -2557,7 +2557,12 @@ public class T4MSC : EditorWindow {
 					EditorGUILayout.Space();
 					if(GUILayout.Button("Make Albedo Atlas",  GUILayout.Height(25)))
                     {
-
+						Material CurrentMaterials = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial;
+						Utility.Es_TerrainAlbemMaker.MakeAlbedoAtlas(CurrentMaterials);
+                    }	
+					if(GUILayout.Button("Make Splat Atlas",  GUILayout.Height(25)))
+                    {
+						
                     }	                
 				
 					EditorGUILayout.Space();
@@ -2688,34 +2693,35 @@ public class T4MSC : EditorWindow {
 			}
 	}
 	
-	void ProjectionWorldConfig(){
-					if (UpSideTile.x != UpSideTile.y && joinTiles==true || UpSideTile.z != UpSideTile.w && joinTiles==true){
-						joinTiles = false;
-					}	
-					EditorGUILayout.Space();
-					GUILayout.Label("Painting Menu is not available for this shader" , EditorStyles.boldLabel);
-					EditorGUILayout.Space();
-					EditorGUILayout.Space();
-					GUILayout.Label("World Projection Shaders Options", EditorStyles.boldLabel);
-					EditorGUILayout.Space();
-					UpSideF = EditorGUILayout.Slider("UP/SIDES Fighting :",UpSideF,0,10);
-					BlendFac= EditorGUILayout.Slider("Blend Factor :",BlendFac,0,20);
-					EditorGUILayout.Space();
-					EditorGUILayout.Space();
-					joinTiles = EditorGUILayout.Toggle ("Tiling : Join X/Y", joinTiles);
-					EditorGUILayout.Space();
-					if (joinTiles){
-						UpSideTile.x =UpSideTile.y= EditorGUILayout.Slider("Up Texture Tiling :",UpSideTile.x,0.01f,10);
-						UpSideTile.z =UpSideTile.w =EditorGUILayout.Slider("Side Tecture Tiling :",UpSideTile.z,0.01f,10);
-					}else{
-						UpSideTile.x= EditorGUILayout.Slider("Up Texture Tiling X:",UpSideTile.x,0.01f,2);
-						UpSideTile.y= EditorGUILayout.Slider("Up Texture Tiling Y:",UpSideTile.y,0.01f,2);
-						UpSideTile.z =EditorGUILayout.Slider("Side Tecture Tiling X:",UpSideTile.z,0.01f,2);
-						UpSideTile.w =EditorGUILayout.Slider("Side Tecture Tiling Y:",UpSideTile.w,0.01f,2);
-					}
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector ("_Tiling",new  Vector4(UpSideTile.x,UpSideTile.y, UpSideTile.z, UpSideTile.w));
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetFloat ("_UpSide",UpSideF);
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetFloat ("_Blend",BlendFac);
+	void ProjectionWorldConfig()
+	{
+		if (UpSideTile.x != UpSideTile.y && joinTiles==true || UpSideTile.z != UpSideTile.w && joinTiles==true){
+			joinTiles = false;
+		}	
+		EditorGUILayout.Space();
+		GUILayout.Label("Painting Menu is not available for this shader" , EditorStyles.boldLabel);
+		EditorGUILayout.Space();
+		EditorGUILayout.Space();
+		GUILayout.Label("World Projection Shaders Options", EditorStyles.boldLabel);
+		EditorGUILayout.Space();
+		UpSideF = EditorGUILayout.Slider("UP/SIDES Fighting :",UpSideF,0,10);
+		BlendFac= EditorGUILayout.Slider("Blend Factor :",BlendFac,0,20);
+		EditorGUILayout.Space();
+		EditorGUILayout.Space();
+		joinTiles = EditorGUILayout.Toggle ("Tiling : Join X/Y", joinTiles);
+		EditorGUILayout.Space();
+		if (joinTiles){
+			UpSideTile.x =UpSideTile.y= EditorGUILayout.Slider("Up Texture Tiling :",UpSideTile.x,0.01f,10);
+			UpSideTile.z =UpSideTile.w =EditorGUILayout.Slider("Side Tecture Tiling :",UpSideTile.z,0.01f,10);
+		}else{
+			UpSideTile.x= EditorGUILayout.Slider("Up Texture Tiling X:",UpSideTile.x,0.01f,2);
+			UpSideTile.y= EditorGUILayout.Slider("Up Texture Tiling Y:",UpSideTile.y,0.01f,2);
+			UpSideTile.z =EditorGUILayout.Slider("Side Tecture Tiling X:",UpSideTile.z,0.01f,2);
+			UpSideTile.w =EditorGUILayout.Slider("Side Tecture Tiling Y:",UpSideTile.w,0.01f,2);
+		}
+		CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector ("_Tiling",new  Vector4(UpSideTile.x,UpSideTile.y, UpSideTile.z, UpSideTile.w));
+		CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetFloat ("_UpSide",UpSideF);
+		CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetFloat ("_Blend",BlendFac);
 	}
 	
 	void Substance()

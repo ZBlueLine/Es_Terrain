@@ -60,7 +60,7 @@ public class T4MExtendsSC : Editor {
 		
 	}
 
-	//»æÖÆÎÆÀí
+	//ç»˜åˆ¶çº¹ç†
 	void Painter (){
 		if (State != 1)
 			State = 1;
@@ -100,7 +100,7 @@ public class T4MExtendsSC : Editor {
 
 			if (Physics.Raycast(terrain, out raycastHit, Mathf.Infinity,layerMask))
 			{
-				//Èç¹ûÀàĞÍÊÇutËµÃ÷ÊÇ´ÓTerrain×ª»¯¹ıÀ´µÄ
+				//å¦‚æœç±»å‹æ˜¯utè¯´æ˜æ˜¯ä»Terrainè½¬åŒ–è¿‡æ¥çš„
 				if (T4MSC.CurrentSelect.gameObject.GetComponent <T4MObjSC>().ConvertType !="UT")
 					T4MSC.T4MPreview.transform.localEulerAngles = new Vector3(90,180+T4MSC.CurrentSelect.localEulerAngles.y,0);
                 else 
@@ -108,13 +108,13 @@ public class T4MExtendsSC : Editor {
 				
 				T4MSC.T4MPreview.transform.position = raycastHit.point;
 
-				//ÕâÀï²»ÉÔÎ¢¼ÓÒ»µãÔÚ2019ÖĞÎŞ·¨ÔÚÆ½ÃæÉÏÏÔÊ¾³öÀ´
+				//è¿™é‡Œä¸ç¨å¾®åŠ ä¸€ç‚¹åœ¨2019ä¸­æ— æ³•åœ¨å¹³é¢ä¸Šæ˜¾ç¤ºå‡ºæ¥
 				T4MSC.T4MPreview.transform.position += new Vector3(0, 1, 0);
 
-				//Õâ¶ÎÊÇÏÔÊ¾»­±ÊÓÃµÄ
+				//è¿™æ®µæ˜¯æ˜¾ç¤ºç”»ç¬”ç”¨çš„
 
 
-				// ÈıÖÖ»­±ÊĞÎÊ½
+				// ä¸‰ç§ç”»ç¬”å½¢å¼
 				if (T4MSC.PaintPrev == T4MSC.PaintHandle.Follow_Normal_Circle){
 					Handles.color = new Color(1f,1f,0f,0.05f);
 					Handles.DrawSolidDisc(raycastHit.point, raycastHit.normal, T4MSC.T4MPreview.orthographicSize*0.9f);
@@ -130,21 +130,21 @@ public class T4MExtendsSC : Editor {
 
 					Vector2 pixelUV = raycastHit.textureCoord*T4MSC.T4MMaskTexUVCoord;//0.14f;
 
-					//×ª³ÉÍ¼Æ¬ÉÏµÄ×ø±ê
+					//è½¬æˆå›¾ç‰‡ä¸Šçš„åæ ‡
 					int PuX = Mathf.FloorToInt (pixelUV.x * T4MSC.T4MMaskTex.width);
 					int PuY = Mathf.FloorToInt (pixelUV.y * T4MSC.T4MMaskTex.height);
 
-					//Percent Òò¸ÃÊÇÆ´´íÁË£¬T4MBrushSizeInPourcentÊÇ½«±ÊË¢´óĞ¡×ª»¯³É  1:(T4MMaskTex.width/100)  µÄ´óĞ¡
+					//Percent å› è¯¥æ˜¯æ‹¼é”™äº†ï¼ŒT4MBrushSizeInPourcentæ˜¯å°†ç¬”åˆ·å¤§å°è½¬åŒ–æˆ  1:(T4MMaskTex.width/100)  çš„å¤§å°
 
 					int x = Mathf.Clamp ( PuX - T4MSC.T4MBrushSizeInPourcent / 2, 0, T4MSC.T4MMaskTex.width - 1);
 					int y = Mathf.Clamp (PuY - T4MSC.T4MBrushSizeInPourcent / 2, 0, T4MSC.T4MMaskTex.height - 1);
 					int width = Mathf.Clamp (( PuX + T4MSC.T4MBrushSizeInPourcent / 2) , 0, T4MSC.T4MMaskTex.width) - x;
 					int height = Mathf.Clamp ((PuY + T4MSC.T4MBrushSizeInPourcent / 2), 0, T4MSC.T4MMaskTex.height) - y;
 
-					//¶ÁÈ¡Ñ¡ÖĞÇø¿éµÄÑÕÉ«
+					//è¯»å–é€‰ä¸­åŒºå—çš„é¢œè‰²
 					Color[] terrainBay =  T4MSC.T4MMaskTex.GetPixels (x, y, width, height, 0);
 
-					//Èç¹ûÓĞÁ½ÕÅÈ¨ÖØÍ¼
+					//å¦‚æœæœ‰ä¸¤å¼ æƒé‡å›¾
 					if(T4MSC.T4MMaskTex2)
 						terrainBay2 = T4MSC.T4MMaskTex2.GetPixels(x, y, width, height, 0);
 					for (int i = 0; i < height; i++) {
@@ -152,14 +152,14 @@ public class T4MExtendsSC : Editor {
 						{
 							int index = (i * width) + j;
 
-							//»ñÈ¡±ÊË¢µÄaÍ¨µÀÖµ
+							//è·å–ç¬”åˆ·çš„aé€šé“å€¼
 							float Stronger= T4MSC.T4MBrushAlpha[Mathf.Clamp((y + i) - (PuY - T4MSC.T4MBrushSizeInPourcent / 2), 0, T4MSC.T4MBrushSizeInPourcent - 1)*T4MSC.T4MBrushSizeInPourcent + Mathf.Clamp((x + j) - ( PuX - T4MSC.T4MBrushSizeInPourcent / 2), 0, T4MSC.T4MBrushSizeInPourcent - 1)]* T4MSC.T4MStronger;
 							terrainBay[index] = Color.Lerp(terrainBay[index], T4MSC.T4MtargetColor,Stronger);//*0.3f);
 							if(T4MSC.T4MMaskTex2)
 								terrainBay2[index] = Color.Lerp(terrainBay2[index], T4MSC.T4MtargetColor2,Stronger);///0.3f);
 						}
 					}
-					//ÕâÀïĞŞ¸ÄµÄÊÇMaskÌùÍ¼Ò²¾ÍÊÇÈ¨ÖØÍ¼£¬»­ÃæÉÏµÄĞ§¹ûÊÇÍ¨¹ıshader¶ÁÈ¡È¨ÖØÍ¼À´ÏÔÊ¾µÄ
+					//è¿™é‡Œä¿®æ”¹çš„æ˜¯Maskè´´å›¾ä¹Ÿå°±æ˜¯æƒé‡å›¾ï¼Œç”»é¢ä¸Šçš„æ•ˆæœæ˜¯é€šè¿‡shaderè¯»å–æƒé‡å›¾æ¥æ˜¾ç¤ºçš„
 					if(T4MSC.T4MMaskTex2){
 						T4MSC.T4MMaskTex2.SetPixels(x, y, width,height, terrainBay2, 0);
 						T4MSC.T4MMaskTex2.Apply();
@@ -185,7 +185,7 @@ public class T4MExtendsSC : Editor {
 		}
 	}
 	
-	//»æÖÆÖ²±»
+	//ç»˜åˆ¶æ¤è¢«
 	void Planting (){
 		if (State != 2)
 				State = 2;
@@ -264,7 +264,7 @@ public class T4MExtendsSC : Editor {
 							if (PlantObjPreview)
 								DestroyImmediate (PlantObjPreview);
 
-							//´´½¨±ÊË¢ÏÔÊ¾
+							//åˆ›å»ºç¬”åˆ·æ˜¾ç¤º
 							PlantObjPreview = Instantiate (CurrentObject, raycastHit.point,Quaternion.identity) as GameObject;
 						
 							T4MPlantRenderer =  PlantObjPreview.GetComponentsInChildren <Renderer>();
