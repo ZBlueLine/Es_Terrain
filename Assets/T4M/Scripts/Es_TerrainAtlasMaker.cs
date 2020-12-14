@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Utility
 {
@@ -9,45 +10,55 @@ namespace Utility
         static int adgeAdd;
         static public void MakeAlbedoAtlas(Material myMaterial)
         {
-            Debug.Log("Click succeed!");
-            return ;
-            // Texture[] TextureList = new Texture[16];
-            // int sqrCount = 4;
-            // string id = "0";
-            // for(int i = 0; i < 16; ++i)
-            // {
-            //     if (myMaterial.HasProperty("_Splat" + id))
-            //     {
-            //         TextureList[i] = myMaterial.GetTexture("_Splat" + id);
-            //     }
-            // }
-            // int wid = normalTerrainData.splatPrototypes[0].texture.width;
-            // int hei =normalTerrainData.splatPrototypes[0].texture.height;
-            // adgeAdd = 1;
+            Texture2D[] TextureList = new Texture2D[16];
+            int sqrCount = 4;
+            char id = '0';
+            Color[] Colors = new Color[256*256];
+            int len = Colors.Length;
+            for(int i = 0; i < len; ++i)
+                Colors[i] = new Color(0, 0, 0, 0);
+            for(int i = 0; i < 16; ++i)
+            {
+                if (myMaterial.HasProperty("_Splat" + id))
+                {
+                    Debug.Log("_Splat" + id);
+                    TextureList[i] = (Texture2D)myMaterial.GetTexture("_Splat" + id);
+                }
+                else
+                {
+                    Debug.Log(i);
+		            TextureList[i] = new Texture2D (256, 256,  TextureFormat.ARGB32, true);
+                    TextureList[i].SetPixels(Colors);
+                }
+                ++id;
+            }
+            int wid = TextureList[0].width;
+            int hei =TextureList[0].height;
+            adgeAdd = 1;
 
-            // albedoAtlas = new Texture2D(sqrCount * wid +  adgeAdd*sqrCount*2, sqrCount * hei + adgeAdd * sqrCount * 2, TextureFormat.RGBA32, true);
-            // normalAtlas = new Texture2D(sqrCount * wid + adgeAdd * sqrCount * 2, sqrCount * hei + adgeAdd * sqrCount * 2, TextureFormat.RGBA32, true);
-            // print(albedoAtlas.width);
-            // for (int i = 0; i < sqrCount; i++)
-            // {
-            //     for (int j = 0; j < sqrCount; j++)
-            //     {
-            //         int index = i * sqrCount + j;
+            Texture2D albedoAtlas = new Texture2D(sqrCount * wid +  adgeAdd*sqrCount*2, sqrCount * hei + adgeAdd * sqrCount * 2, TextureFormat.RGBA32, true);
+            Texture2D normalAtlas = new Texture2D(sqrCount * wid + adgeAdd * sqrCount * 2, sqrCount * hei + adgeAdd * sqrCount * 2, TextureFormat.RGBA32, true);
+            Debug.Log(albedoAtlas.width);
+            for (int i = 0; i < sqrCount; i++)
+            {
+                for (int j = 0; j < sqrCount; j++)
+                {
+                    int index = i * sqrCount + j;
 
-            //         if (index >= normalTerrainData.splatPrototypes.Length) break;
-            //         copyToAltas(normalTerrainData.splatPrototypes[index].texture, albedoAtlas, i, j, wid, hei);
-            //         copyToAltas(normalTerrainData.splatPrototypes[index].normalMap, normalAtlas, i, j, wid, hei);
-            //     }
-            // }
+                    if (index >= TextureList.Length) break;
+                    copyToAltas(TextureList[index], albedoAtlas, i, j, wid, hei);
+                    //copyToAltas(normalTerrainData.splatPrototypes[index].normalMap, normalAtlas, i, j, wid, hei);
+                }
+            }
 
-            // albedoAtlas.Apply();
-            // normalAtlas.Apply();
-            // File.WriteAllBytes(Application.dataPath+"/albedoAtlas.png",albedoAtlas.EncodeToPNG());
-            // File.WriteAllBytes(Application.dataPath+"/normalAtlas.png",normalAtlas.EncodeToPNG());
-            // DestroyImmediate(albedoAtlas);
-            // DestroyImmediate(normalAtlas);
+            albedoAtlas.Apply();
+            normalAtlas.Apply();
+            File.WriteAllBytes(Application.dataPath+"/albedoAtlas.png",albedoAtlas.EncodeToPNG());
+            File.WriteAllBytes(Application.dataPath+"/normalAtlas.png",normalAtlas.EncodeToPNG());
+            Object.DestroyImmediate(albedoAtlas);
+            Object.DestroyImmediate(normalAtlas);
         }
-        private void copyToAltas(Texture2D src, Texture2D texture, int i, int j, int wid, int hei)
+        static private void copyToAltas(Texture2D src, Texture2D texture, int i, int j, int wid, int hei)
         {
         
             if (src == null) return;

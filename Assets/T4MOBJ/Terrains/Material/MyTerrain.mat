@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat0:
-        m_Texture: {fileID: 2800000, guid: a04369ef803f8cd48bfad211841f4bd3, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6660e6d5bdd560548a721b42e01ac644, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat1:
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat3:
-        m_Texture: {fileID: 2800000, guid: a04369ef803f8cd48bfad211841f4bd3, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0c6007bfb4ab65a4194c53553544e1a6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat4:

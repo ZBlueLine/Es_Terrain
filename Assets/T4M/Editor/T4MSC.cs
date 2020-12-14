@@ -3574,8 +3574,7 @@ public class T4MSC : EditorWindow {
 		//把png格式的权重图传到shader里面
 		Texture test =(Texture) AssetDatabase.LoadAssetAtPath(path, typeof(Texture));
 		//TextureImporter textureImporter = GetTextureSettings(path);
-		Texture2D test2 = (Texture2D)AssetDatabase.LoadAssetAtPath(path, typeof(Texture2D));
-		Debug.Log("final format!!! " + test2.format);
+		
 		Tmaterial.SetTexture ("_Control", test);
 		
 		
