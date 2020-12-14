@@ -3373,18 +3373,20 @@ public class T4MSC : EditorWindow {
 		AssetDatabase.ImportAsset (path, ImportAssetOptions.ForceUpdate);
 		
 		TextureImporter TextureI= AssetImporter.GetAtPath (path) as TextureImporter;
-		TextureI.textureFormat = TextureImporterFormat.ARGB32;
+		TextureImporterPlatformSettings MySetting = new TextureImporterPlatformSettings();
+		MySetting.format = TextureImporterFormat.ARGB32;
+		TextureI.SetPlatformTextureSettings(MySetting);
+		//TextureI.textureFormat = TextureImporterFormat.ARGB32;
 		TextureI.isReadable = true;
 		TextureI.anisoLevel = 9;
 		TextureI.mipmapEnabled = false;
 		TextureI.wrapMode = TextureWrapMode.Clamp;
 		AssetDatabase.ImportAsset (path, ImportAssetOptions.ForceUpdate);
-		
 		Texture Contr2 =(Texture) AssetDatabase.LoadAssetAtPath(path, typeof(Texture));
 		CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Control2", Contr2);
 		IniNewSelect();
-	}
 	
+	}
 	
 	 void ConvertUTerrain()
 	{
@@ -3540,7 +3542,10 @@ public class T4MSC : EditorWindow {
 		
 		//Modification de la Texture 
 		TextureImporter TextureI= AssetImporter.GetAtPath (path) as TextureImporter;
-		TextureI.textureFormat = TextureImporterFormat.ARGB32;
+		TextureImporterPlatformSettings MySetting = new TextureImporterPlatformSettings();
+		MySetting.format = TextureImporterFormat.ARGB32;
+		TextureI.SetPlatformTextureSettings(MySetting);
+		//TextureI.textureFormat = TextureImporterFormat.ARGB32;
 		TextureI.isReadable = true;
 		TextureI.anisoLevel = 9;
 		TextureI.mipmapEnabled = false;
@@ -3574,7 +3579,7 @@ public class T4MSC : EditorWindow {
 		//把png格式的权重图传到shader里面
 		Texture test =(Texture) AssetDatabase.LoadAssetAtPath(path, typeof(Texture));
 		//TextureImporter textureImporter = GetTextureSettings(path);
-		
+
 		Tmaterial.SetTexture ("_Control", test);
 		
 		

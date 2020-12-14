@@ -133,5 +133,72 @@ namespace Utility
             texture.SetPixels(j * (wid + 2 * adgeAdd) + adgeAdd + wid, i * (hei + 2 * adgeAdd) + hei + adgeAdd, adgeAdd, adgeAdd, fillColor);
 
         }
+    //     void MakeSplat()
+    //     {
+        
+    //         int wid = normalTerrainData.alphamapTextures[0].width;
+    //         int hei = normalTerrainData.alphamapTextures[0].height;
+    //         List<Color[]> colors = new List<Color[]>();
+    //         //t.terrainData.alphamapTextures[i].GetPixels();
+    //         for (int i = 0; i < normalTerrainData.alphamapTextures.Length; i++)
+    //         {
+    //             colors.Add(normalTerrainData.alphamapTextures[i].GetPixels());
+    //         }
+
+    //         splatID = new Texture2D(wid, hei, TextureFormat.RGB24, false, true);
+
+    //         splatID.filterMode = FilterMode.Point;
+
+    //         var splatIDColors = splatID.GetPixels();    
+    //         for (int i = 0; i < hei; i++)
+    //         {
+    //             for (int j = 0; j < wid; j++)
+    //             {
+    //                 List<SplatData> splatDatas = new List<SplatData>();
+    //                 int index = i * wid + j;
+    //                 // splatIDColors[index].r=1 / 16.0f;
+    //                 //struct 是值引用 所以 Add到list后  可以复用（修改他属性不会影响已经加入的数据）
+    //                 for (int k = 0; k < colors.Count; k++)
+    //                 {
+    //                     SplatData sd;
+    //                     sd.id = k * 4;
+    //                     sd.weight = colors[k][index].r;
+    //                     sd.nearWeight = getNearWeight(colors[k], index, wid, 0);
+    //                     splatDatas.Add(sd);
+    //                     sd.id++;
+    //                     sd.weight = colors[k][index].g;
+    //                     sd.nearWeight = getNearWeight(colors[k], index, wid, 1);
+
+    //                     splatDatas.Add(sd);
+    //                     sd.id++;
+    //                     sd.weight = colors[k][index].b;
+    //                     sd.nearWeight = getNearWeight(colors[k], index, wid, 2);
+
+    //                     splatDatas.Add(sd);
+    //                     sd.id++;
+    //                     sd.weight = colors[k][index].a;
+    //                     sd.nearWeight = getNearWeight(colors[k], index, wid, 3);
+
+    //                     splatDatas.Add(sd);
+    //                 }
+    //                 //按权重排序选出最重要几个
+    //                 splatDatas.Sort((x, y) => -(x.weight+x.nearWeight).CompareTo(y.weight+y.nearWeight));
+    //                 //只存最重要3个图层 用一点压缩方案可以一张图存更多图层 ,这里最多支持16张
+    //                 splatIDColors[index].r = splatDatas[0].id / 16f; //
+    //                 splatIDColors[index].g = splatDatas[1].id / 16f;
+    //                 splatIDColors[index].b =  splatDatas[2].id / 16f;
+    //             }
+    //         }
+    //         splatID.SetPixels(splatIDColors);
+    //         splatID.Apply();
+    //         // 改用图片文件时可设置压缩为R8 代码生成有格式限制 空间有点浪费
+    //         splatWeight = new Texture2D(wid*2, hei*2,normalTerrainData.alphamapTextures[0].format, true, true);
+    //         splatWeight.filterMode = FilterMode.Bilinear;
+    //         for (int i = 0; i < normalTerrainData.alphamapTextures.Length; i++)
+    //         {
+    //             splatWeight.SetPixels((i%2)*wid,(i/2)*hei,wid,hei,normalTerrainData.alphamapTextures[i].GetPixels());
+    //         }
+    //         splatWeight.Apply();
+    //     }
     }
 }
