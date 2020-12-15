@@ -97,8 +97,8 @@ public class T4MExtendsSC : Editor {
 			}else if (e.type ==  EventType.KeyDown && e.keyCode==KeyCode.KeypadMinus){
 				T4MSC.brushSize -= 1;
 			}
-
-			if (Physics.Raycast(terrain, out raycastHit, Mathf.Infinity,layerMask))
+			string currentSelect = Selection.transforms[0].name;
+			if (Physics.Raycast(terrain, out raycastHit, Mathf.Infinity,layerMask)&&raycastHit.collider.name == currentSelect)
 			{
 				//如果类型是ut说明是从Terrain转化过来的
 				if (T4MSC.CurrentSelect.gameObject.GetComponent <T4MObjSC>().ConvertType !="UT")
@@ -125,9 +125,8 @@ public class T4MExtendsSC : Editor {
 					Handles.DrawWireDisc(raycastHit.point, raycastHit.normal, T4MSC.T4MPreview.orthographicSize*0.9f);
 					//Debug.Log("Follow_Normal_WireCircle" + T4MSC.T4MPreview.transform.position + "and" + raycastHit.point);
 				}
-				
-				if ((e.type ==  EventType.MouseDrag && e.alt == false && e.shift == false && e.button == 0) || (e.shift == false && e.alt == false && e.button == 0 && ToggleF == false)){	
-
+				if ((e.type ==  EventType.MouseDrag && e.alt == false && e.shift == false && e.button == 0) || (e.type !=  EventType.MouseMove&&e.shift == false && e.alt == false && e.isMouse &&e.button == 0 && ToggleF == false))
+				{		
 					Vector2 pixelUV = raycastHit.textureCoord*T4MSC.T4MMaskTexUVCoord;//0.14f;
 
 					//转成图片上的坐标
@@ -181,7 +180,9 @@ public class T4MExtendsSC : Editor {
 					T4MSC.SaveTexture();
 					ToggleF = false;
 				}
-			}
+			}//如果不鼠标没有在范围内
+			else
+				DestroyImmediate(T4MSC.T4MPreview);
 		}
 	}
 	

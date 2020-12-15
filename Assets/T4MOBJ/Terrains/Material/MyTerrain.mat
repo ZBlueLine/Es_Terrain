@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MyTerrain
-  m_Shader: {fileID: 4800000, guid: f2f6b6e39e980504893d05edd3d25b1b, type: 3}
+  m_Shader: {fileID: 4800000, guid: fb3ca5d2b21012f43ab2a3d498f2fdbd, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,6 +19,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BumpSplat0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpSplat1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Control:
         m_Texture: {fileID: 2800000, guid: b3993fbd3281b774ab19337b1d284aef, type: 3}
         m_Scale: {x: 1, y: 1}

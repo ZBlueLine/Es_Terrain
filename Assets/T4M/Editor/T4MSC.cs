@@ -2558,12 +2558,12 @@ public class T4MSC : EditorWindow {
 					if(GUILayout.Button("Make Albedo Atlas",  GUILayout.Height(25)))
                     {
 						Material CurrentMaterials = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial;
-						Utility.Es_TerrainAlbemMaker.MakeAlbedoAtlas(CurrentMaterials);
+						Utility.Es_TerrainAlbemMaker.MakeAlbedoAtlas(CurrentMaterials, CurrentSelect.gameObject.name);
                     }	
 					if(GUILayout.Button("Make Splat Atlas",  GUILayout.Height(25)))
                     {
 						Material CurrentMaterials = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial;
-						Utility.Es_TerrainAlbemMaker.MakeSplat(CurrentMaterials);
+						Utility.Es_TerrainAlbemMaker.MakeSplat(CurrentMaterials, CurrentSelect.gameObject.name);
                     }	                
 				
 					EditorGUILayout.Space();

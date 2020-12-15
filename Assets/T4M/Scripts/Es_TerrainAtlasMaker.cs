@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
+using System.IO;
 
 namespace Utility
 {
@@ -9,7 +10,7 @@ namespace Utility
     {
         static int adgeAdd;
         static public Texture2D splatID;
-        static public void MakeAlbedoAtlas(Material myMaterial)
+        static public void MakeAlbedoAtlas(Material myMaterial, string name)
         {
             Texture2D[] TextureList = new Texture2D[16];
             int sqrCount = 4;
@@ -54,8 +55,13 @@ namespace Utility
 
             albedoAtlas.Apply();
             normalAtlas.Apply();
-            File.WriteAllBytes(Application.dataPath+"/albedoAtlas.png",albedoAtlas.EncodeToPNG());
-            File.WriteAllBytes(Application.dataPath+"/normalAtlas.png",normalAtlas.EncodeToPNG());
+            
+            string savePath = Application.dataPath+"/"+"Es_TerrainAtlas"+"/"+name;
+            DirectoryInfo mydir = new DirectoryInfo(savePath);
+            if(!mydir.Exists)
+                System.IO.Directory.CreateDirectory(savePath);
+            System.IO.File.WriteAllBytes(savePath+"/albedoAtlas.png",albedoAtlas.EncodeToPNG());
+            System.IO.File.WriteAllBytes(savePath+"/normalAtlas.png",normalAtlas.EncodeToPNG());
             Object.DestroyImmediate(albedoAtlas);
             Object.DestroyImmediate(normalAtlas);
         }
@@ -142,7 +148,7 @@ namespace Utility
             public float nearWeight;
         }
 
-        static public void MakeSplat(Material myMaterial)
+        static public void MakeSplat(Material myMaterial,string name)
         {
             // if(!myMaterial.HasProperty("_Control2"))
             //     return;
@@ -168,7 +174,7 @@ namespace Utility
                     colors.Add(((Texture2D)myMaterial.GetTexture(tmp)).GetPixels());
                     MySplat[i] = new Texture2D (512, 512,  TextureFormat.ARGB32, true);
                     MySplat[i] = (Texture2D)myMaterial.GetTexture(tmp);
-                    File.WriteAllBytes(Application.dataPath+"/"+ tmp +".png",MySplat[i].EncodeToPNG());
+                    // File.WriteAllBytes(Application.dataPath+"/"+ tmp +".png",MySplat[i].EncodeToPNG());
                 }
                 else
                 {
@@ -177,7 +183,7 @@ namespace Utility
                     MySplat[i].SetPixels(DefualtColors);
                 }
                 if(i == 0)
-                    indx = '0';
+                    indx = '1';
                 ++indx;
             }
             // t.terrainData.alphamapTextures[i].GetPixels();
@@ -241,8 +247,12 @@ namespace Utility
                 splatWeight.SetPixels((i%2)*wid,(i/2)*hei,wid,hei,MySplat[i].GetPixels());
             }
             splatWeight.Apply();
-            File.WriteAllBytes(Application.dataPath+"/splatWeight.png",splatWeight.EncodeToPNG());
-            File.WriteAllBytes(Application.dataPath+"/splatID.png",splatID.EncodeToPNG());
+            string savePath = Application.dataPath+"/"+"Es_TerrainAtlas"+"/"+name;
+            DirectoryInfo mydir = new DirectoryInfo(savePath);
+            if(!mydir.Exists)
+                System.IO.Directory.CreateDirectory(savePath);
+            System.IO.File.WriteAllBytes(savePath+"/splatWeight.png",splatWeight.EncodeToPNG());
+            System.IO.File.WriteAllBytes(savePath+"/splatID.png",splatID.EncodeToPNG());
         }
 
         static private float getNearWeight(Color[] colors, int index, int wid, int rgba)
