@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.IO;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(T4MObjSC))]
 [CanEditMultipleObjects]
@@ -33,8 +35,10 @@ public class T4MExtendsSC : Editor {
 	static ArrayList onPlayModeInstanceRot= new ArrayList();
 	static ArrayList onPlayModeInstanceSize= new ArrayList();
 	static ArrayList onPlayModeDestroyed= new ArrayList();
+	static bool saveflag = false;
 	static bool Play;
 	
+
 	void OnSceneGUI  () {
 		//Draw Texture
 		if (T4MSC.T4MPreview && T4MSC.T4MMenuToolbar == 3)
@@ -59,7 +63,6 @@ public class T4MExtendsSC : Editor {
 		}
 		
 	}
-
 	//绘制纹理
 	void Painter (){
 		if (State != 1)
@@ -125,6 +128,19 @@ public class T4MExtendsSC : Editor {
 					Handles.DrawWireDisc(raycastHit.point, raycastHit.normal, T4MSC.T4MPreview.orthographicSize*0.9f);
 					//Debug.Log("Follow_Normal_WireCircle" + T4MSC.T4MPreview.transform.position + "and" + raycastHit.point);
 				}
+				
+				// Debug.Log(e.type);
+				// if(e.type == EventType.MouseDown && UndoObj!=null&&!saveflag)
+				// {
+				// 	// var path = "Assets/testimg/tt.png";
+				// 	// var bytes   = UndoObj[0].EncodeToPNG ();
+				// 	saveflag = true;
+				// 	Undo.RecordObjects(UndoObj, "T4MMask");
+				// 	// File.WriteAllBytes (path, bytes);
+				// 	Debug.Log("!!");
+				// }
+				if(e.type == EventType.MouseUp)
+					saveflag = false;
 				if ((e.type ==  EventType.MouseDrag && e.alt == false && e.shift == false && e.button == 0) || (e.type !=  EventType.MouseMove&&e.shift == false && e.alt == false && e.isMouse &&e.button == 0 && ToggleF == false))
 				{		
 					Vector2 pixelUV = raycastHit.textureCoord*T4MSC.T4MMaskTexUVCoord;//0.14f;
@@ -158,21 +174,27 @@ public class T4MExtendsSC : Editor {
 								terrainBay2[index] = Color.Lerp(terrainBay2[index], T4MSC.T4MtargetColor2,Stronger);///0.3f);
 						}
 					}
-					//这里修改的是Mask贴图也就是权重图，画面上的效果是通过shader读取权重图来显示的
-					if(T4MSC.T4MMaskTex2){
+					if(T4MSC.T4MMaskTex2)
+					{
 						T4MSC.T4MMaskTex2.SetPixels(x, y, width,height, terrainBay2, 0);
 						T4MSC.T4MMaskTex2.Apply();
-						UndoObj = new Texture2D[2];
-                        UndoObj[0] = T4MSC.T4MMaskTex;
-                        UndoObj[1] = T4MSC.T4MMaskTex2;
-					}else{
-						UndoObj = new Texture2D[1];
-						UndoObj[0] = T4MSC.T4MMaskTex;
 					}
+					//这里修改的是Mask贴图也就是权重图，画面上的效果是通过shader读取权重图来显示的
+					// if(UndoObj == null)
+					// {
+					// 	UndoObj = new Texture2D[2];
+					// 	if(T4MSC.T4MMaskTex2){
+					// 		UndoObj[0] = T4MSC.T4MMaskTex;
+					// 		UndoObj[1] = T4MSC.T4MMaskTex2;
+					// 		T4MSC.T4MMaskTex2.SetPixels(x, y, width,height, terrainBay2, 0);
+					// 		T4MSC.T4MMaskTex2.Apply();
+					// 	}else{
+					// 		UndoObj[0] = T4MSC.T4MMaskTex;
+					// 	}
+					// }
 					T4MSC.T4MMaskTex.SetPixels(x, y, width, height, terrainBay, 0);
-					T4MSC.T4MMaskTex.Apply();
-					//Undo.RecordObjects(UndoObj, "T4MMask"); //Unity don't work correctly with this for now
-					//PrefabUtility.RecordPrefabInstancePropertyModifications(T4MSC.CurrentSelect.gameObject);
+					T4MSC.T4MMaskTex.Apply(); //Unity don't work correctly with this for now
+					//Undo.RecordObjects(UndoObj, "T4MMask");
 					ToggleF = true;	
 					
 				}else if (e.type ==  EventType.MouseUp && e.alt == false && e.button == 0 && ToggleF == true){
