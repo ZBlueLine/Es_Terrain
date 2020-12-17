@@ -149,7 +149,7 @@ public class T4MExtendsSC : Editor {
 					int PuX = Mathf.FloorToInt (pixelUV.x * T4MSC.T4MMaskTex.width);
 					int PuY = Mathf.FloorToInt (pixelUV.y * T4MSC.T4MMaskTex.height);
 
-					//Percent 因该是拼错了，T4MBrushSizeInPourcent是将笔刷大小转化成  1:(T4MMaskTex.width/100)  的大小
+					//T4MBrushSizeInPourcent是将笔刷大小转化成  1:(T4MMaskTex.width/100)  的大小
 
 					int x = Mathf.Clamp ( PuX - T4MSC.T4MBrushSizeInPourcent / 2, 0, T4MSC.T4MMaskTex.width - 1);
 					int y = Mathf.Clamp (PuY - T4MSC.T4MBrushSizeInPourcent / 2, 0, T4MSC.T4MMaskTex.height - 1);

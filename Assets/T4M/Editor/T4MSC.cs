@@ -179,7 +179,9 @@ public class T4MSC : EditorWindow {
 	static public float T4MObjSize=1;
 	 
 	T4MObjSC[] T4MObjCounter;
-	
+
+	Texture[] Layer;
+	Texture[] LayerBump;
 	Texture Layer1;
 	Texture Layer2;
 	Texture Layer3;
@@ -238,6 +240,8 @@ public class T4MSC : EditorWindow {
 	Material LOD3Material;
 	TerrainData terrain;
 	
+
+	//默认的三种shader
 	EnumShaderGLES2 MenuTextureSM2 = EnumShaderGLES2.T4M_4_Textures_HighSpec;
 	EnumShaderGLES1 MenuTextureSM1 = EnumShaderGLES1.T4M_2_Textures_Auto_BeastLM_2DrawCall;
 	EnumShaderGLES3 MenuTextureSM3 = EnumShaderGLES3.T4M_4_Textures_Diffuse;
@@ -1128,43 +1132,46 @@ public class T4MSC : EditorWindow {
 		}
 		
 	}
-	
 
+
+	Vector2 scrollPosition = new Vector2(0, 0);
 	void PixelPainterMenu()
 	{
 		if (CurrentSelect.GetComponent <T4MObjSC>())
-			{
+		{
 			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial && CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0") && CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1")&& CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Control")){	
 				IniBrush();
 				InitPincil();
-			if (!T4MPreview)
-				InitPreview();
-			if (intialized){	
-				GUILayout.BeginHorizontal();
-					GUILayout.FlexibleSpace();
-						GUILayout.Label(AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/brushes.jpg", typeof(Texture)) as Texture,"label");
-						GUILayout.BeginHorizontal("box", GUILayout.Width(318));
+				if (!T4MPreview)
+					InitPreview();
+				if (intialized){	
+					GUILayout.BeginHorizontal();
 						GUILayout.FlexibleSpace();
-						selBrush= GUILayout.SelectionGrid (selBrush, TexBrush, 9,"gridlist", GUILayout.Width(290), GUILayout.Height(70));
+							GUILayout.Label(AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/brushes.jpg", typeof(Texture)) as Texture,"label");
+							GUILayout.BeginHorizontal("box", GUILayout.Width(318));
+							GUILayout.FlexibleSpace();
+							selBrush= GUILayout.SelectionGrid (selBrush, TexBrush, 9,"gridlist", GUILayout.Width(290), GUILayout.Height(70));
+							GUILayout.FlexibleSpace();
+							GUILayout.EndHorizontal();
 						GUILayout.FlexibleSpace();
-						GUILayout.EndHorizontal();
-					GUILayout.FlexibleSpace();
-				GUILayout.EndHorizontal();
-				
-				GUILayout.BeginHorizontal();
-					GUILayout.FlexibleSpace();
-						GUILayout.BeginHorizontal("box", GUILayout.Width(340));
+					GUILayout.EndHorizontal();
+
+					//选择笔刷的区块
+					GUILayout.BeginHorizontal();
 						GUILayout.FlexibleSpace();
-						if (TexTexture.Length >4)
-						T4MselTexture= GUILayout.SelectionGrid (T4MselTexture, TexTexture, 6 ,"gridlist",GUILayout.Width(340), GUILayout.Height(58));
-						else
-						T4MselTexture= GUILayout.SelectionGrid (T4MselTexture, TexTexture, 4 ,"gridlist",GUILayout.Width(340), GUILayout.Height(86));
+							scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(360), GUILayout.Height(180));
+							if(TexTexture.Length < 4)
+								T4MselTexture = GUILayout.SelectionGrid(T4MselTexture, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(85));
+							else if(TexTexture.Length < 9)
+								T4MselTexture = GUILayout.SelectionGrid(T4MselTexture, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(170));
+							else if (TexTexture.Length < 13)
+								T4MselTexture = GUILayout.SelectionGrid(T4MselTexture, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(255));
+							else if (TexTexture.Length < 17)
+								T4MselTexture = GUILayout.SelectionGrid(T4MselTexture, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(340));
+						GUILayout.EndScrollView();
 						GUILayout.FlexibleSpace();
-						GUILayout.EndHorizontal();
-					GUILayout.FlexibleSpace();
-				GUILayout.EndHorizontal();
-				
-				 EditorGUILayout.Space();
+					GUILayout.EndHorizontal();
+					EditorGUILayout.Space();
 				 
 					
 				GUILayout.BeginHorizontal();
@@ -1451,11 +1458,13 @@ public class T4MSC : EditorWindow {
 		//Material NewPMat = new Material ("Shader \"Hidden/PreviewT4M\" { \nProperties {\n	_Transp (\"Transparency\", Range(0,1)) = 1 \n	_MainTex (\"Texture\", 2D) = \"\" { }\n	_MaskTex (\"Mask (RGB) Trans (A)\", 2D) = \"\" { }\n	}\nSubShader {\n		Pass {\n		Blend SrcAlpha OneMinusSrcAlpha \n  CGPROGRAM\n       #pragma vertex vert\n       #pragma fragment frag\n       #include \"UnityCG.cginc\"\n  struct v2f {\n   float4 pos : SV_POSITION;\n    float4 uv1 : TEXCOORD0;\n   float4 uv2 : TEXCOORD1;\n    float4 uv3 : TEXCOORD2;\n       };\n		float4x4 _Projector;\n		float4x4 _ProjectorClip;\n		float _Transp;\n       sampler2D _MaskTex;\n       sampler2D _MainTex;\n      // v2f vert (float4 v : POSITION)\n      v2f vert(appdata_full v)\n       {\n   v2f o;\n   o.pos = mul(UNITY_MATRIX_MVP, v.vertex);\n\n   // TexGen ObjectLinear:\n   // use object space vertex position\n   o.uv1 = v.vertex.xyzw;\n   o.uv2 = mul(_Projector,v.vertex);\n   o.uv3 = mul(_ProjectorClip,v.vertex);\n   return o;\n       }\n       \n       half4 frag (v2f i) : SV_Target\n       {\n half4 col =tex2Dproj(_MainTex, UNITY_PROJ_COORD(i.uv2));\n half4 mask =tex2Dproj (_MaskTex,UNITY_PROJ_COORD(i.uv2));\n half4 res = col*mask.a;\n res *= (half)_Transp;\n   return res;\n  }\n ENDCG \n } \n	}\n}\n");
 		Material NewPMat = new Material(Shader.Find("T4M/PreviewT4M")); //("Shader \"Hidden/PreviewT4M\" { \n	Properties {\n _Transp (\"Transparency\", Range(0,1)) = 1 \n  _MainTex (\"Texture\", 2D) = \"\" { }\n	_MaskTex (\"Mask (RGB) Trans (A)\", 2D) = \"\" { TexGen ObjectLinear }\n	}\nSubShader {\n Pass {\nBlend SrcAlpha OneMinusSrcAlpha  \n SetTexture [_MainTex]  \n SetTexture [_MaskTex] {\n constantColor (1,1,1,[_Transp]) \n	combine previous , texture* constant\n	Matrix [_Projector]\n	}\n}\n}\n}");
 
-		//为笔刷Projector设置shader
+		//为笔刷Projector的shader设置贴图
 
 		T4MPreview.material = NewPMat;
 		T4MPreview.material.SetTexture("_MainTex", TexTexture[T4MselTexture]);
 		T4MPreview.material.SetTexture("_MaskTex", TexBrush[selBrush]);
+
+		//继续加的话要改一下
 		if (T4MselTexture == 0){
 			T4MPreview.material.SetTextureScale ("_MainTex", Layer1Tile);
 			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer1Tile.x,Layer1Tile.y,0,0));
@@ -1486,6 +1495,8 @@ public class T4MSC : EditorWindow {
 			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
 			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
 		}
+
+
 	}
 	
 	static public void SaveTexture()
@@ -1500,11 +1511,19 @@ public class T4MSC : EditorWindow {
 		}
 		//AssetDatabase.Refresh ();
 	}
-	
+
+	//从shader中获得贴图的预览
 	void InitPincil()
 	{
-		//从shader中获得贴图的预览
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
+		if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat15"))
+		{
+			TexTexture = new Texture[16];
+		}
+		if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat7"))
+		{
+			TexTexture = new Texture[8];
+		}
+		else if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
 			TexTexture = new Texture[6];
 			TexTexture[0]=AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0"))as Texture;
 			TexTexture[1]=AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1"))as Texture;
@@ -2412,106 +2431,107 @@ public class T4MSC : EditorWindow {
 					GUILayout.FlexibleSpace();
 				GUILayout.EndHorizontal();
 
+
 				//这段是添加纹理
-				GUILayout.Label("Add / Replace / Substances Update" , EditorStyles.boldLabel);
-					EditorGUILayout.BeginVertical("box");
-					EditorGUILayout.BeginHorizontal();
-						GUILayout.Label("",GUILayout.Width(3));
-						 if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-							if (!PreceduralAdd && !MaterialAdd && Precedural)
-								PreceduralAdd = Precedural;
+					GUILayout.Label("Add / Replace / Substances Update" , EditorStyles.boldLabel);
+						EditorGUILayout.BeginVertical("box");
+						EditorGUILayout.BeginHorizontal();
+							GUILayout.Label("",GUILayout.Width(3));
+							 if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+								if (!PreceduralAdd && !MaterialAdd && Precedural)
+									PreceduralAdd = Precedural;
 					
-								if (PreceduralAdd){
-								CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", PreceduralAdd.GetInputTexture("_MainTex"));
-								if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", PreceduralAdd.GetInputTexture ("_BumpMap"));
-								}else if (MaterialAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", MaterialAdd);
-								}
-								selProcedural = 0;
-								PreceduralAdd = null;
-								MaterialAdd=null;
-								IniNewSelect();
-						}
-						if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-							if (!PreceduralAdd && !MaterialAdd && Precedural)
-								PreceduralAdd = Precedural;
-							if (PreceduralAdd){
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", PreceduralAdd.GetInputTexture ("_MainTex"));
-							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
-								CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", PreceduralAdd.GetInputTexture ("_BumpMap"));
-							}else if (MaterialAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", MaterialAdd);
-								}
-								selProcedural = 1;
-								PreceduralAdd = null;
-								MaterialAdd=null;
-								IniNewSelect();
-						}
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2"))
-							if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-								if (!PreceduralAdd && !MaterialAdd && Precedural)
-								PreceduralAdd = Precedural;
-								if (PreceduralAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", PreceduralAdd.GetInputTexture ("_MainTex"));
-									if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", PreceduralAdd.GetInputTexture ("_BumpMap"));
-								}else if (MaterialAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", MaterialAdd);
-								}
-								selProcedural = 2;
-								PreceduralAdd = null;
-								MaterialAdd=null;
-								IniNewSelect();
+									if (PreceduralAdd){
+									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", PreceduralAdd.GetInputTexture("_MainTex"));
+									if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", PreceduralAdd.GetInputTexture ("_BumpMap"));
+									}else if (MaterialAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", MaterialAdd);
+									}
+									selProcedural = 0;
+									PreceduralAdd = null;
+									MaterialAdd=null;
+									IniNewSelect();
 							}
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3"))
 							if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
 								if (!PreceduralAdd && !MaterialAdd && Precedural)
-								PreceduralAdd = Precedural;
+									PreceduralAdd = Precedural;
 								if (PreceduralAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", PreceduralAdd.GetInputTexture ("_MainTex"));
-									if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", PreceduralAdd.GetInputTexture ("_BumpMap"));
+								CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", PreceduralAdd.GetInputTexture ("_MainTex"));
+								if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
+									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", PreceduralAdd.GetInputTexture ("_BumpMap"));
 								}else if (MaterialAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", MaterialAdd);
-								}
-								selProcedural = 3;
-								PreceduralAdd = null;
-								MaterialAdd=null;
-								IniNewSelect();
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", MaterialAdd);
+									}
+									selProcedural = 1;
+									PreceduralAdd = null;
+									MaterialAdd=null;
+									IniNewSelect();
 							}
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4"))
-							if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-								if (!PreceduralAdd && !MaterialAdd && Precedural)
-								PreceduralAdd = Precedural;
+							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2"))
+								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+									if (!PreceduralAdd && !MaterialAdd && Precedural)
+									PreceduralAdd = Precedural;
+									if (PreceduralAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", PreceduralAdd.GetInputTexture ("_MainTex"));
+										if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
+											CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", PreceduralAdd.GetInputTexture ("_BumpMap"));
+									}else if (MaterialAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", MaterialAdd);
+									}
+									selProcedural = 2;
+									PreceduralAdd = null;
+									MaterialAdd=null;
+									IniNewSelect();
+								}
+							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3"))
+								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+									if (!PreceduralAdd && !MaterialAdd && Precedural)
+									PreceduralAdd = Precedural;
+									if (PreceduralAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", PreceduralAdd.GetInputTexture ("_MainTex"));
+										if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
+											CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", PreceduralAdd.GetInputTexture ("_BumpMap"));
+									}else if (MaterialAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", MaterialAdd);
+									}
+									selProcedural = 3;
+									PreceduralAdd = null;
+									MaterialAdd=null;
+									IniNewSelect();
+								}
+							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4"))
+								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+									if (!PreceduralAdd && !MaterialAdd && Precedural)
+									PreceduralAdd = Precedural;
 					
-								if (PreceduralAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", PreceduralAdd.GetInputTexture ("_MainTex"));
-								}else if (MaterialAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", MaterialAdd);
+									if (PreceduralAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", PreceduralAdd.GetInputTexture ("_MainTex"));
+									}else if (MaterialAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", MaterialAdd);
+									}
+									selProcedural = 4;
+									PreceduralAdd = null;
+									MaterialAdd=null;
+									IniNewSelect();
 								}
-								selProcedural = 4;
+							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5"))
+								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+									if (!PreceduralAdd && !MaterialAdd && Precedural)
+									PreceduralAdd = Precedural;
+					
+									if (PreceduralAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", PreceduralAdd.GetInputTexture ("_MainTex"));
+								}else if (MaterialAdd){
+										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", MaterialAdd);
+								}
+								selProcedural = 5;
 								PreceduralAdd = null;
 								MaterialAdd=null;
 								IniNewSelect();
 							}
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5"))
-							if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-								if (!PreceduralAdd && !MaterialAdd && Precedural)
-								PreceduralAdd = Precedural;
-					
-								if (PreceduralAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", PreceduralAdd.GetInputTexture ("_MainTex"));
-							}else if (MaterialAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", MaterialAdd);
-							}
-							selProcedural = 5;
-							PreceduralAdd = null;
-							MaterialAdd=null;
-							IniNewSelect();
-						}
 						
-					EditorGUILayout.EndHorizontal();
+						EditorGUILayout.EndHorizontal();
 				
 				
 					string AssetName= AssetDatabase.GetAssetPath(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural)) as string;
@@ -2597,93 +2617,124 @@ public class T4MSC : EditorWindow {
 		}
 	}
 	void ClassicMat(){
-			
-			if (selProcedural == 0){
-				if(Layer1){
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					GUILayout.BeginHorizontal("Box");
-					GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TDiff.jpg", typeof(Texture)));
-					Layer1=EditorGUILayout.ObjectField(Layer1, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0",Layer1);
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
-						GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TBump.jpg", typeof(Texture)));
-						Layer1Bump=EditorGUILayout.ObjectField(Layer1Bump, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0",Layer1Bump);
-					}
-				GUILayout.FlexibleSpace();
-				GUILayout.EndHorizontal();
-				}
-				
-			}else if (selProcedural == 1){
-				if(Layer2){
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					GUILayout.BeginHorizontal("Box");
-					GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TDiff.jpg", typeof(Texture)));
-					Layer2=EditorGUILayout.ObjectField(Layer2, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1",Layer2);
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1")){
-						GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TBump.jpg", typeof(Texture)));
-						Layer2Bump=EditorGUILayout.ObjectField(Layer2Bump, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1",Layer2Bump);
-					}
-				GUILayout.FlexibleSpace();
-				GUILayout.EndHorizontal();
-				}
-				
-			}else if (selProcedural == 2){
-				if(Layer3){
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					GUILayout.BeginHorizontal("Box");
-					GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TDiff.jpg", typeof(Texture)));
-					Layer3=EditorGUILayout.ObjectField(Layer3, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2",Layer3);
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2")){
-						GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TBump.jpg", typeof(Texture)));
-						Layer3Bump=EditorGUILayout.ObjectField(Layer3Bump, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2",Layer3Bump);
-					}
-					GUILayout.FlexibleSpace();
-					GUILayout.EndHorizontal();
-				}
-				
-			}else if (selProcedural == 3){
-				if(Layer4){
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					GUILayout.BeginHorizontal("Box");
-					GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TDiff.jpg", typeof(Texture)));
-					Layer4=EditorGUILayout.ObjectField(Layer4, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3",Layer4);
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3")){
-						GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TBump.jpg", typeof(Texture)));
-						Layer4Bump=EditorGUILayout.ObjectField(Layer4Bump, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3",Layer4Bump);
-						
-					}
-						GUILayout.FlexibleSpace();
-						GUILayout.EndHorizontal();
-				}
-				
-			}else if (selProcedural == 4){
-				if(Layer5){	
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					GUILayout.BeginHorizontal("Box");
-					GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TDiff.jpg", typeof(Texture)));
-					Layer5=EditorGUILayout.ObjectField(Layer5, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4",Layer5);
-					GUILayout.FlexibleSpace();
-					GUILayout.EndHorizontal();
-				}
-			}else if (selProcedural == 5){
-				if(Layer6){
-					GUILayout.Label("Modify" , EditorStyles.boldLabel);
-					GUILayout.BeginHorizontal("Box");
-					GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TDiff.jpg", typeof(Texture)));
-					Layer6=EditorGUILayout.ObjectField(Layer6, typeof(Texture2D),true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5",Layer6);
-				}
-			}
-		
-			if(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC") || CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC")){
+        if (selProcedural < 16)
+		{
+			if(Layer == null)
+				Layer = new Texture[16];
+			if (LayerBump == null)
+				LayerBump = new Texture[16];
+			String myIndex = selProcedural.ToString();
+			GUILayout.Label("Modify", EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal("Box");
+            GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+			Layer[selProcedural] = EditorGUILayout.ObjectField(Layer[selProcedural], typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+            CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat" + myIndex, Layer[selProcedural]);
+            if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat" + myIndex))
+            {
+                GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
+                LayerBump[selProcedural] = EditorGUILayout.ObjectField(LayerBump[selProcedural], typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+                CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat" + myIndex, LayerBump[selProcedural]);
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+        //if (selProcedural == 0)
+        //{
+        //    //if(Layer1){
+        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
+        //    GUILayout.BeginHorizontal("Box");
+        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+        //    Layer1 = EditorGUILayout.ObjectField(Layer1, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat0", Layer1);
+        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
+        //    {
+        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
+        //        Layer1Bump = EditorGUILayout.ObjectField(Layer1Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", Layer1Bump);
+        //    }
+        //    GUILayout.FlexibleSpace();
+        //    GUILayout.EndHorizontal();
+        //    //}
+        //}
+        //else if (selProcedural == 1)
+        //{
+        //    //if(Layer2){
+        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
+        //    GUILayout.BeginHorizontal("Box");
+        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+        //    Layer2 = EditorGUILayout.ObjectField(Layer2, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat1", Layer2);
+        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
+        //    {
+        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
+        //        Layer2Bump = EditorGUILayout.ObjectField(Layer2Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", Layer2Bump);
+        //    }
+        //    GUILayout.FlexibleSpace();
+        //    GUILayout.EndHorizontal();
+        //    //}	
+        //}
+        //else if (selProcedural == 2)
+        //{
+        //    //if(Layer3){
+        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
+        //    GUILayout.BeginHorizontal("Box");
+        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+        //    Layer3 = EditorGUILayout.ObjectField(Layer3, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat2", Layer3);
+        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
+        //    {
+        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
+        //        Layer3Bump = EditorGUILayout.ObjectField(Layer3Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", Layer3Bump);
+        //    }
+        //    GUILayout.FlexibleSpace();
+        //    GUILayout.EndHorizontal();
+        //    //}
+        //}
+        //else if (selProcedural == 3)
+        //{
+        //    //if(Layer4){
+        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
+        //    GUILayout.BeginHorizontal("Box");
+        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+        //    Layer4 = EditorGUILayout.ObjectField(Layer4, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat3", Layer4);
+        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
+        //    {
+        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
+        //        Layer4Bump = EditorGUILayout.ObjectField(Layer4Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", Layer4Bump);
+
+        //    }
+        //    GUILayout.FlexibleSpace();
+        //    GUILayout.EndHorizontal();
+        //    //}
+        //}
+        //else if (selProcedural == 4)
+        //{
+        //    //if(Layer5){	
+        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
+        //    GUILayout.BeginHorizontal("Box");
+        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+        //    Layer5 = EditorGUILayout.ObjectField(Layer5, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat4", Layer5);
+        //    GUILayout.FlexibleSpace();
+        //    GUILayout.EndHorizontal();
+        //    //}
+        //}
+        //else if (selProcedural == 5)
+        //{
+        //    //if(Layer6){
+        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
+        //    GUILayout.BeginHorizontal("Box");
+        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
+        //    Layer6 = EditorGUILayout.ObjectField(Layer6, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
+        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat5", Layer6);
+        //    //}
+        //}
+
+        if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC") || CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC")){
 				GUILayout.Label("Manual Lightmap Add" , EditorStyles.boldLabel);
 				GUILayout.BeginHorizontal("Box");
 				GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/TLM.jpg", typeof(Texture)));
@@ -2883,7 +2934,7 @@ public class T4MSC : EditorWindow {
 				
 				ShaderModel =(SM) EditorGUILayout.EnumPopup ("Shader Model", ShaderModel, GUILayout.Width(340));
 				
-				
+				//选择shader
 				if (ShaderModel == SM.ShaderModel1){
 					MenuTextureSM1 =(EnumShaderGLES1) EditorGUILayout.EnumPopup ("Shader", MenuTextureSM1, GUILayout.Width(340));
 				}else if (ShaderModel == SM.ShaderModel2){	
@@ -2898,7 +2949,7 @@ public class T4MSC : EditorWindow {
 				GUILayout.Label("Shader Compatibility", EditorStyles.boldLabel);
 						GUILayout.BeginHorizontal();
 							GUILayout.Label("GLES 1.1",GUILayout.Width(300));
-							if(ShaderModel != SM.ShaderModel3 && ShaderModel != SM.ShaderModel2)
+							if(ShaderModel == SM.ShaderModel3 && ShaderModel != SM.ShaderModel2)
 								GUILayout.Label(AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/ok.png", typeof(Texture)) as Texture);
 							else
 								GUILayout.Label(AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/ko.png", typeof(Texture)) as Texture);
@@ -3088,8 +3139,11 @@ public class T4MSC : EditorWindow {
 		}
 	}
 	
+
+
 	void MyT4MApplyChange()
 	{
+		T4MselTexture = 0;
 		if (ShaderModel == SM.ShaderModel1){
 			//Diffuse SM1 
 			if (MenuTextureSM1 == EnumShaderGLES1.T4M_2_Textures_Auto_BeastLM_2DrawCall){	
@@ -3275,39 +3329,47 @@ public class T4MSC : EditorWindow {
 					CreateControl2Text();
 				else CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Control2", Control2);
 		}
-		
-		
-		
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0"))
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", Layer1);
 
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1"))
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", Layer2);	
+
+		for (int i = 0; i < 16; ++i)
+		{
+			String myIndex = i.ToString();
+			if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat" + myIndex))
+				CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat" + myIndex, Layer[i]);
+			if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat" + myIndex))
+				CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat" + myIndex, LayerBump[i]);
+		}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0"))
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", Layer1);
+
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1"))
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", Layer2);	
 		
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", Layer3);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", Layer4);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", Layer5);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", Layer6);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", Layer1Bump);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", Layer2Bump);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", Layer3Bump);
-		}
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3")){
-			CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", Layer4Bump);
-		}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", Layer3);
+		//}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", Layer4);
+		//}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", Layer5);
+		//}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", Layer6);
+		//}
+
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", Layer1Bump);
+		//}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", Layer2Bump);
+		//}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", Layer3Bump);
+		//}
+		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3")){
+		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", Layer4Bump);
+		//}
 		if(T4MMaster){
 			CurrentSelect.GetComponent <T4MObjSC>().EnabledLODSystem = ActivatedLOD;
 			CurrentSelect.GetComponent <T4MObjSC>().enabledBillboard = ActivatedBillboard;
