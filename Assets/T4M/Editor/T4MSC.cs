@@ -182,12 +182,12 @@ public class T4MSC : EditorWindow {
 
 	Texture[] Layer;
 	Texture[] LayerBump;
-	Texture Layer1;
-	Texture Layer2;
-	Texture Layer3;
-	Texture Layer4;
-	Texture Layer5;
-	Texture Layer6;
+	//Texture Layer1;
+	//Texture Layer2;
+	//Texture Layer3;
+	//Texture Layer4;
+	//Texture Layer5;
+	//Texture Layer6;
 	Texture LMMan;
 	Texture Layer1Bump;
 	Texture Layer2Bump;
@@ -215,13 +215,15 @@ public class T4MSC : EditorWindow {
 	bool CheckLOD3Collider;
 	bool joinTiles = true;
 	bool intialized=false;
-	
-	Vector2 Layer1Tile;
-	Vector2 Layer2Tile;
-	Vector2 Layer3Tile;
-	Vector2 Layer4Tile;
-	Vector2 Layer5Tile;
-	Vector2 Layer6Tile;
+
+	//贴图的偏移和缩放
+	Vector2[] LayerTile;
+	//Vector2 Layer1Tile;
+	//Vector2 Layer2Tile;
+	//Vector2 Layer3Tile;
+	//Vector2 Layer4Tile;
+	//Vector2 Layer5Tile;
+	//Vector2 Layer6Tile;
 	Vector2 scrollPos;
 	
 	GameObject  Child;
@@ -1133,7 +1135,7 @@ public class T4MSC : EditorWindow {
 		
 	}
 
-
+	//绘制界面
 	Vector2 scrollPosition = new Vector2(0, 0);
 	void PixelPainterMenu()
 	{
@@ -1237,196 +1239,230 @@ public class T4MSC : EditorWindow {
 					
 					joinTiles = EditorGUILayout.Toggle ("Tiling : Join X/Y", joinTiles);
 					EditorGUILayout.Space();
-					if (joinTiles){
-						Layer1Tile.x =Layer1Tile.y= EditorGUILayout.Slider("Layer1 Tiling :",Layer1Tile.x,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat0",new  Vector2(Layer1Tile.x,Layer1Tile.x));
-						EditorGUILayout.Space();
-						Layer2Tile.x = Layer2Tile.y =EditorGUILayout.Slider("Layer2 Tiling :",Layer2Tile.x,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat1",new  Vector2(Layer2Tile.x,Layer2Tile.x));
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
-						Layer3Tile.x = Layer3Tile.y =EditorGUILayout.Slider("Layer3 Tiling :",Layer3Tile.x,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat2",new  Vector2(Layer3Tile.x,Layer3Tile.x));
+					if (joinTiles)
+					{
+						String myIndex = "";
+						for(int i = 0; i < 16; ++i)
+                        {
+							myIndex = i.ToString();
+							if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat" + myIndex))
+							{
+								LayerTile[i].x = LayerTile[i].y = EditorGUILayout.Slider("Layer" + myIndex + " Tiling :", LayerTile[i].x, 1, 500 * T4MMaskTexUVCoord);
+								CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTextureScale("_Splat" + myIndex, new Vector2(LayerTile[i].x, LayerTile[i].x));
+							}
+							EditorGUILayout.Space();
 						}
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
-						Layer4Tile.x = Layer4Tile.y =EditorGUILayout.Slider("Layer4 Tiling :",Layer4Tile.x,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat3",new  Vector2(Layer4Tile.x,Layer4Tile.x));
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling3",new Vector4(Layer4Tile.x,Layer4Tile.x,0,0));
-						}
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
-						Layer5Tile.x = Layer5Tile.y =EditorGUILayout.Slider("Layer5 Tiling :",Layer5Tile.x,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat4",new  Vector2(Layer5Tile.x,Layer5Tile.x));
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling4",new Vector4(Layer5Tile.x,Layer5Tile.x,0,0));
-						}
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
-						Layer6Tile.x = Layer6Tile.y =EditorGUILayout.Slider("Layer6 Tiling :",Layer6Tile.x,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat5",new  Vector2(Layer6Tile.x,Layer6Tile.x));
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling5",new Vector4(Layer6Tile.x,Layer6Tile.x,0,0));
-						}
-					}else{
-						Layer1Tile.x  = EditorGUILayout.Slider("Layer1 TilingX :",Layer1Tile.x,1,500*T4MMaskTexUVCoord);
-						Layer1Tile.y = EditorGUILayout.Slider("Layer1 TilingZ :",Layer1Tile.y,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat0",new  Vector2(Layer1Tile.x,Layer1Tile.y));
-						EditorGUILayout.Space();
-						Layer2Tile.x = EditorGUILayout.Slider("Layer2 TilingX :",Layer2Tile.x,1,500*T4MMaskTexUVCoord);
-						Layer2Tile.y = EditorGUILayout.Slider("Layer2 TilingZ :",Layer2Tile.y,1,500*T4MMaskTexUVCoord);
-						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat1",new  Vector2(Layer2Tile.x,Layer2Tile.y));
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
-							Layer3Tile.x = EditorGUILayout.Slider("Layer3 TilingX :",Layer3Tile.x,1,500*T4MMaskTexUVCoord);
-							Layer3Tile.y = EditorGUILayout.Slider("Layer3 TilingZ :",Layer3Tile.y,1,500*T4MMaskTexUVCoord);
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat2",new  Vector2(Layer3Tile.x,Layer3Tile.y));
-						}
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
-							Layer4Tile.x = EditorGUILayout.Slider("Layer4 TilingX :",Layer4Tile.x,1,500*T4MMaskTexUVCoord);
-							Layer4Tile.y = EditorGUILayout.Slider("Layer4 TilingZ :",Layer4Tile.y,1,500*T4MMaskTexUVCoord);
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat3",new  Vector2(Layer4Tile.x,Layer4Tile.y));
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling3",new Vector4(Layer4Tile.x,Layer4Tile.y,0,0));
-						}
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
-							Layer5Tile.x = EditorGUILayout.Slider("Layer5 TilingX :",Layer5Tile.x,1,500*T4MMaskTexUVCoord);
-							Layer5Tile.y = EditorGUILayout.Slider("Layer5 TilingZ :",Layer5Tile.y,1,500*T4MMaskTexUVCoord);
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat4",new  Vector2(Layer5Tile.x,Layer5Tile.y));
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling4",new Vector4(Layer5Tile.x,Layer5Tile.y,0,0));
-						}
-						EditorGUILayout.Space();
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
-							Layer6Tile.x = EditorGUILayout.Slider("Layer6 TilingX :",Layer6Tile.x,1,500*T4MMaskTexUVCoord);
-							Layer6Tile.y = EditorGUILayout.Slider("Layer6 TilingZ :",Layer6Tile.y,1,500*T4MMaskTexUVCoord);
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat5",new  Vector2(Layer6Tile.x,Layer6Tile.y));
-							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling5",new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
-						}
+						//Layer1Tile.x =Layer1Tile.y= EditorGUILayout.Slider("Layer1 Tiling :",Layer1Tile.x,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat0",new  Vector2(Layer1Tile.x,Layer1Tile.x));
+						//EditorGUILayout.Space();
+						//Layer2Tile.x = Layer2Tile.y =EditorGUILayout.Slider("Layer2 Tiling :",Layer2Tile.x,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat1",new  Vector2(Layer2Tile.x,Layer2Tile.x));
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
+						//Layer3Tile.x = Layer3Tile.y =EditorGUILayout.Slider("Layer3 Tiling :",Layer3Tile.x,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat2",new  Vector2(Layer3Tile.x,Layer3Tile.x));
+						//}
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
+						//Layer4Tile.x = Layer4Tile.y =EditorGUILayout.Slider("Layer4 Tiling :",Layer4Tile.x,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat3",new  Vector2(Layer4Tile.x,Layer4Tile.x));
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling3",new Vector4(Layer4Tile.x,Layer4Tile.x,0,0));
+						//}
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
+						//Layer5Tile.x = Layer5Tile.y =EditorGUILayout.Slider("Layer5 Tiling :",Layer5Tile.x,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat4",new  Vector2(Layer5Tile.x,Layer5Tile.x));
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling4",new Vector4(Layer5Tile.x,Layer5Tile.x,0,0));
+						//}
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
+						//Layer6Tile.x = Layer6Tile.y =EditorGUILayout.Slider("Layer6 Tiling :",Layer6Tile.x,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat5",new  Vector2(Layer6Tile.x,Layer6Tile.x));
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling5",new Vector4(Layer6Tile.x,Layer6Tile.x,0,0));
+						//}
 					}
-				EditorGUILayout.EndScrollView();
-				GUILayout.EndVertical();
-				GUILayout.FlexibleSpace();
-				GUILayout.EndHorizontal();
+					else
+					{
+						String myIndex = "";
+						for (int i = 0; i < 16; ++i)
+						{
+							myIndex = i.ToString();
+							if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat" + myIndex))
+							{
+								LayerTile[i].x = EditorGUILayout.Slider("Layer"+ myIndex + " TilingX :", LayerTile[i].x, 1, 500 * T4MMaskTexUVCoord);
+								LayerTile[i].y = EditorGUILayout.Slider("Layer"+ myIndex + " TilingZ :", LayerTile[i].y, 1, 500 * T4MMaskTexUVCoord);
+								CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTextureScale("_Splat" + myIndex, new Vector2(LayerTile[i].x, LayerTile[i].y));
+							}
+						}
+						//Layer1Tile.x  = EditorGUILayout.Slider("Layer1 TilingX :",Layer1Tile.x,1,500*T4MMaskTexUVCoord);
+						//Layer1Tile.y = EditorGUILayout.Slider("Layer1 TilingZ :",Layer1Tile.y,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat0",new  Vector2(Layer1Tile.x,Layer1Tile.y));
+						//EditorGUILayout.Space();
+						//Layer2Tile.x = EditorGUILayout.Slider("Layer2 TilingX :",Layer2Tile.x,1,500*T4MMaskTexUVCoord);
+						//Layer2Tile.y = EditorGUILayout.Slider("Layer2 TilingZ :",Layer2Tile.y,1,500*T4MMaskTexUVCoord);
+						//CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat1",new  Vector2(Layer2Tile.x,Layer2Tile.y));
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
+						//	Layer3Tile.x = EditorGUILayout.Slider("Layer3 TilingX :",Layer3Tile.x,1,500*T4MMaskTexUVCoord);
+						//	Layer3Tile.y = EditorGUILayout.Slider("Layer3 TilingZ :",Layer3Tile.y,1,500*T4MMaskTexUVCoord);
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat2",new  Vector2(Layer3Tile.x,Layer3Tile.y));
+						//}
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
+						//	Layer4Tile.x = EditorGUILayout.Slider("Layer4 TilingX :",Layer4Tile.x,1,500*T4MMaskTexUVCoord);
+						//	Layer4Tile.y = EditorGUILayout.Slider("Layer4 TilingZ :",Layer4Tile.y,1,500*T4MMaskTexUVCoord);
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat3",new  Vector2(Layer4Tile.x,Layer4Tile.y));
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling3",new Vector4(Layer4Tile.x,Layer4Tile.y,0,0));
+						//}
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
+						//	Layer5Tile.x = EditorGUILayout.Slider("Layer5 TilingX :",Layer5Tile.x,1,500*T4MMaskTexUVCoord);
+						//	Layer5Tile.y = EditorGUILayout.Slider("Layer5 TilingZ :",Layer5Tile.y,1,500*T4MMaskTexUVCoord);
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat4",new  Vector2(Layer5Tile.x,Layer5Tile.y));
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling4",new Vector4(Layer5Tile.x,Layer5Tile.y,0,0));
+						//}
+						//EditorGUILayout.Space();
+						//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
+						//	Layer6Tile.x = EditorGUILayout.Slider("Layer6 TilingX :",Layer6Tile.x,1,500*T4MMaskTexUVCoord);
+						//	Layer6Tile.y = EditorGUILayout.Slider("Layer6 TilingZ :",Layer6Tile.y,1,500*T4MMaskTexUVCoord);
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTextureScale ("_Splat5",new  Vector2(Layer6Tile.x,Layer6Tile.y));
+						//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetVector("_Tiling5",new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
+						//}
+					}
+
+					EditorGUILayout.EndScrollView();
+					GUILayout.EndVertical();
+					GUILayout.FlexibleSpace();
+					GUILayout.EndHorizontal();
 				
-				if (TexBrush.Length>0){
-					T4MPreview.material.SetTexture("_MaskTex", TexBrush[selBrush]);
-					MeshFilter temp = CurrentSelect.GetComponent<MeshFilter>();
-					if (temp == null)
-						temp = CurrentSelect.GetComponent<T4MObjSC>().T4MMesh;
-						T4MPreview.orthographicSize = (brushSize* CurrentSelect.localScale.x)*(temp.sharedMesh.bounds.size.x/200);
-						T4MPreview.orthographic =true;
-				}
+					if (TexBrush.Length>0){
+						T4MPreview.material.SetTexture("_MaskTex", TexBrush[selBrush]);
+						MeshFilter temp = CurrentSelect.GetComponent<MeshFilter>();
+						if (temp == null)
+							temp = CurrentSelect.GetComponent<T4MObjSC>().T4MMesh;
+							T4MPreview.orthographicSize = (brushSize* CurrentSelect.localScale.x)*(temp.sharedMesh.bounds.size.x/200);
+							T4MPreview.orthographic =true;
+					}
 					
-					float test = T4MStronger*200/100;
-					T4MPreview.material.SetFloat ("_Transp", Mathf.Clamp(test,0.4f,1));
+						float test = T4MStronger*200/100;
+						T4MPreview.material.SetFloat ("_Transp", Mathf.Clamp(test,0.4f,1));
 				
-				T4MBrushSizeInPourcent = (int)Mathf.Round ((brushSize*T4MMaskTex.width)/100);
-				
-				 
-				//在画笔界面选择纹理
+					T4MBrushSizeInPourcent = (int)Mathf.Round ((brushSize*T4MMaskTex.width)/100);
 
-				if (T4MselTexture == 0)
-					{
-						T4MPreview.material.SetTextureScale ("_MainTex", Layer1Tile);
-						T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer1Tile.x,Layer1Tile.y,0,0));
-					}
-				else if (T4MselTexture == 1)
-					{
-						T4MPreview.material.SetTextureScale ("_MainTex", Layer2Tile);
-						T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer2Tile.x,Layer2Tile.y,0,0));
-					}
-				else if (T4MselTexture == 2)	
-					{
-						T4MPreview.material.SetTextureScale ("_MainTex", Layer3Tile);
-						T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer3Tile.x,Layer3Tile.y,0,0));
-					}
-				else if (T4MselTexture == 3 )
-					{
-						T4MPreview.material.SetTextureScale ("_MainTex", Layer4Tile);
-						T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer4Tile.x,Layer4Tile.y,0,0));
-					}
-				else if (T4MselTexture == 4 )
-					{
-						T4MPreview.material.SetTextureScale ("_MainTex", Layer5Tile);
-						T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer5Tile.x,Layer5Tile.y,0,0));
-					}
-				else if (T4MselTexture == 5 )
-					{
-						T4MPreview.material.SetTextureScale ("_MainTex", Layer6Tile);
-						T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
-					}
 
-				//权重图每个通道存储一种纹理的权值
-				if (selBrush != oldSelBrush || T4MBrushSizeInPourcent != oldBrushSizeInPourcent || T4MBrushAlpha == null || T4MselTexture != oldselTexture){
-					if (T4MselTexture == 0){
-					T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0") as Texture);
-					T4MtargetColor = new Color(1f, 0f, 0f, 0f);
-					if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 0, 0, 0);
+					//在画笔界面选择纹理
+					if(T4MselTexture < 16&& T4MselTexture >= 0)
+					{
+						String myIndex = T4MselTexture.ToString();
+						T4MPreview.material.SetTextureScale("_MainTex", LayerTile[T4MselTexture]);
+						T4MPreview.material.SetVector("_Tiling", 0.1f * new Vector4(LayerTile[T4MselTexture].x, LayerTile[T4MselTexture].y, 0, 0));
 					}
-					else if (T4MselTexture == 1){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1") as Texture);
-						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find ("T4MShaders/ShaderModel1/T4M 2 Textures Auto BeastLM 2DrawCall") || 
-								CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find ("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC")||
-								CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find ("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC"))
-							T4MtargetColor = new Color(0, 0, 0, 1);
-						else {
-						T4MtargetColor = new Color(0, 1, 0, 0);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 0, 0, 0);
-						}							
-					}
-					else if (T4MselTexture == 2){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2") as Texture);
-						T4MtargetColor = new Color(0, 0, 1, 0);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 0, 0, 0);
-					}
-					else if (T4MselTexture == 3 ){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3") as Texture);
-						T4MtargetColor = new Color(0, 0, 0, 1);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 0, 0, 0);
-					}
-					else if (T4MselTexture == 4 ){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4") as Texture);
-						T4MtargetColor = new Color(0, 0, 0, 0);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(1, 0, 0, 0);
-					}
-					else if (T4MselTexture == 5 ){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
-						T4MtargetColor = new Color(0, 0, 0, 0);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 1, 0, 0);
-					}
-					else if (T4MselTexture == 6 ){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
-						T4MtargetColor = new Color(0, 0, 0, 0);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 0, 1, 0);
-					}
-					else if (T4MselTexture == 6 ){
-						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
-						T4MtargetColor = new Color(0, 0, 0, 0);
-						if (T4MMaskTex2)
-							T4MtargetColor2 = new Color(0, 0, 0, 1);
-					}
+					//if (T4MselTexture == 0)
+					//	{
+					//		T4MPreview.material.SetTextureScale ("_MainTex", Layer1Tile);
+					//		T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer1Tile.x,Layer1Tile.y,0,0));
+					//	}
+					//else if (T4MselTexture == 1)
+					//	{
+					//		T4MPreview.material.SetTextureScale ("_MainTex", Layer2Tile);
+					//		T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer2Tile.x,Layer2Tile.y,0,0));
+					//	}
+					//else if (T4MselTexture == 2)	
+					//	{
+					//		T4MPreview.material.SetTextureScale ("_MainTex", Layer3Tile);
+					//		T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer3Tile.x,Layer3Tile.y,0,0));
+					//	}
+					//else if (T4MselTexture == 3 )
+					//	{
+					//		T4MPreview.material.SetTextureScale ("_MainTex", Layer4Tile);
+					//		T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer4Tile.x,Layer4Tile.y,0,0));
+					//	}
+					//else if (T4MselTexture == 4 )
+					//	{
+					//		T4MPreview.material.SetTextureScale ("_MainTex", Layer5Tile);
+					//		T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer5Tile.x,Layer5Tile.y,0,0));
+					//	}
+					//else if (T4MselTexture == 5 )
+					//	{
+					//		T4MPreview.material.SetTextureScale ("_MainTex", Layer6Tile);
+					//		T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
+					//	}
 
-					//读取笔刷的格式
-					Texture2D TBrush = TexBrush[selBrush] as Texture2D;
-					T4MBrushAlpha = new float[T4MBrushSizeInPourcent * T4MBrushSizeInPourcent];
-					for( int  i = 0; i < T4MBrushSizeInPourcent; i++ ) {
-						for( int  j = 0;j < T4MBrushSizeInPourcent; j++ ) {
-							T4MBrushAlpha[j * T4MBrushSizeInPourcent + i] =  TBrush.GetPixelBilinear(((float)i) / T4MBrushSizeInPourcent, ((float)j) /T4MBrushSizeInPourcent).a;
+					//权重图每个通道存储一种纹理的权值
+					if (selBrush != oldSelBrush || T4MBrushSizeInPourcent != oldBrushSizeInPourcent || T4MBrushAlpha == null || T4MselTexture != oldselTexture){
+						if (T4MselTexture == 0){
+						T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0") as Texture);
+						T4MtargetColor = new Color(1f, 0f, 0f, 0f);
+						if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 0, 0, 0);
 						}
+						else if (T4MselTexture == 1){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1") as Texture);
+							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find ("T4MShaders/ShaderModel1/T4M 2 Textures Auto BeastLM 2DrawCall") || 
+									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find ("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC")||
+									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find ("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC"))
+								T4MtargetColor = new Color(0, 0, 0, 1);
+							else {
+							T4MtargetColor = new Color(0, 1, 0, 0);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 0, 0, 0);
+							}							
+						}
+						else if (T4MselTexture == 2){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2") as Texture);
+							T4MtargetColor = new Color(0, 0, 1, 0);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 0, 0, 0);
+						}
+						else if (T4MselTexture == 3 ){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3") as Texture);
+							T4MtargetColor = new Color(0, 0, 0, 1);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 0, 0, 0);
+						}
+						else if (T4MselTexture == 4 ){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4") as Texture);
+							T4MtargetColor = new Color(0, 0, 0, 0);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(1, 0, 0, 0);
+						}
+						else if (T4MselTexture == 5 ){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
+							T4MtargetColor = new Color(0, 0, 0, 0);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 1, 0, 0);
+						}
+						else if (T4MselTexture == 6 ){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
+							T4MtargetColor = new Color(0, 0, 0, 0);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 0, 1, 0);
+						}
+						else if (T4MselTexture == 6 ){
+							T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
+							T4MtargetColor = new Color(0, 0, 0, 0);
+							if (T4MMaskTex2)
+								T4MtargetColor2 = new Color(0, 0, 0, 1);
+						}
+
+						//读取笔刷的格式
+						Texture2D TBrush = TexBrush[selBrush] as Texture2D;
+						T4MBrushAlpha = new float[T4MBrushSizeInPourcent * T4MBrushSizeInPourcent];
+						for( int  i = 0; i < T4MBrushSizeInPourcent; i++ ) {
+							for( int  j = 0;j < T4MBrushSizeInPourcent; j++ ) {
+								T4MBrushAlpha[j * T4MBrushSizeInPourcent + i] =  TBrush.GetPixelBilinear(((float)i) / T4MBrushSizeInPourcent, ((float)j) /T4MBrushSizeInPourcent).a;
+							}
+						}
+						oldselTexture =T4MselTexture;
+						oldSelBrush =selBrush;
+						oldBrushSizeInPourcent =T4MBrushSizeInPourcent;
 					}
-					oldselTexture =T4MselTexture;
-					oldSelBrush =selBrush;
-					oldBrushSizeInPourcent =T4MBrushSizeInPourcent;
+			
 				}
-			}}
-			}else
-			{
+			}
+		}
+		else
+		{
 			GUILayout.BeginHorizontal();
 					GUILayout.FlexibleSpace();
 					GUILayout.Label("Please, select the T4M Object", EditorStyles.boldLabel);
@@ -1465,36 +1501,43 @@ public class T4MSC : EditorWindow {
 		T4MPreview.material.SetTexture("_MaskTex", TexBrush[selBrush]);
 
 		//继续加的话要改一下
-		if (T4MselTexture == 0){
-			T4MPreview.material.SetTextureScale ("_MainTex", Layer1Tile);
-			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer1Tile.x,Layer1Tile.y,0,0));
-			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0") as Texture);
+		if(T4MselTexture < 16)
+        {
+			String myIndex = T4MselTexture.ToString();
+			T4MPreview.material.SetTextureScale("_MainTex", LayerTile[T4MselTexture]);
+			T4MPreview.material.SetVector("_Tiling", 0.1f * new Vector4(LayerTile[T4MselTexture].x, LayerTile[T4MselTexture].y, 0, 0));
+			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat" + myIndex) as Texture);
 		}
-		else if (T4MselTexture == 1){
-			T4MPreview.material.SetTextureScale ("_MainTex", Layer2Tile);
-			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer2Tile.x,Layer2Tile.y,0,0));
-			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1") as Texture);
-		}
-		else if (T4MselTexture == 2){
-			T4MPreview.material.SetTextureScale ("_MainTex", Layer3Tile);
-			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer2Tile.x,Layer2Tile.y,0,0));
-			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2") as Texture);
-		}
-		else if (T4MselTexture == 3){
-			T4MPreview.material.SetTextureScale ("_MainTex", Layer4Tile);
-			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer4Tile.x,Layer4Tile.y,0,0));
-			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3") as Texture);
-		}
-		else if (T4MselTexture == 4 ){
-			T4MPreview.material.SetTextureScale ("_MainTex", Layer5Tile);
-			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer5Tile.x,Layer5Tile.y,0,0));
-			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4") as Texture);
-		}
-		else if (T4MselTexture == 5 ){
-			T4MPreview.material.SetTextureScale ("_MainTex", Layer6Tile);
-			T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
-			T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
-		}
+		//if (T4MselTexture == 0){
+		//	T4MPreview.material.SetTextureScale ("_MainTex", Layer1Tile);
+		//	T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer1Tile.x,Layer1Tile.y,0,0));
+		//	T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0") as Texture);
+		//}
+		//else if (T4MselTexture == 1){
+		//	T4MPreview.material.SetTextureScale ("_MainTex", Layer2Tile);
+		//	T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer2Tile.x,Layer2Tile.y,0,0));
+		//	T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1") as Texture);
+		//}
+		//else if (T4MselTexture == 2){
+		//	T4MPreview.material.SetTextureScale ("_MainTex", Layer3Tile);
+		//	T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer2Tile.x,Layer2Tile.y,0,0));
+		//	T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2") as Texture);
+		//}
+		//else if (T4MselTexture == 3){
+		//	T4MPreview.material.SetTextureScale ("_MainTex", Layer4Tile);
+		//	T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer4Tile.x,Layer4Tile.y,0,0));
+		//	T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3") as Texture);
+		//}
+		//else if (T4MselTexture == 4 ){
+		//	T4MPreview.material.SetTextureScale ("_MainTex", Layer5Tile);
+		//	T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer5Tile.x,Layer5Tile.y,0,0));
+		//	T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4") as Texture);
+		//}
+		//else if (T4MselTexture == 5 ){
+		//	T4MPreview.material.SetTextureScale ("_MainTex", Layer6Tile);
+		//	T4MPreview.material.SetVector("_Tiling",0.1f*new Vector4(Layer6Tile.x,Layer6Tile.y,0,0));
+		//	T4MPreview.material.SetTexture("_MainTex", CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5") as Texture);
+		//}
 
 
 	}
@@ -1553,7 +1596,6 @@ public class T4MSC : EditorWindow {
 			TexTexture = new Texture[2];
 			//TexTexture[0]=AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0"))as Texture;
 			//TexTexture[1]=AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1"))as Texture;
-			
 		}
 	}
 	
@@ -2422,116 +2464,123 @@ public class T4MSC : EditorWindow {
 					GUILayout.FlexibleSpace();
 						GUILayout.BeginHorizontal("box", GUILayout.Width(310));
 						GUILayout.FlexibleSpace();
-						
-							selProcedural = GUILayout.SelectionGrid (selProcedural, TexTexture, 6 ,"gridlist",GUILayout.Width(340), GUILayout.Height(58));
-						
-						
+						scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(360), GUILayout.Height(180));
+							if (TexTexture.Length < 4)
+								selProcedural = GUILayout.SelectionGrid (selProcedural, TexTexture, 4 ,"gridlist", GUILayout.Width(330), GUILayout.Height(170));
+							else if(TexTexture.Length < 8)
+								selProcedural = GUILayout.SelectionGrid(selProcedural, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(170));
+							else if (TexTexture.Length < 13)
+								selProcedural = GUILayout.SelectionGrid(selProcedural, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(255));
+							else if (TexTexture.Length < 17)
+								selProcedural = GUILayout.SelectionGrid(selProcedural, TexTexture, 4, "gridlist", GUILayout.Width(330), GUILayout.Height(340));
+						GUILayout.EndScrollView();
 						GUILayout.FlexibleSpace();
 						GUILayout.EndHorizontal();
 					GUILayout.FlexibleSpace();
 				GUILayout.EndHorizontal();
 
 
-				//这段是添加纹理
-					GUILayout.Label("Add / Replace / Substances Update" , EditorStyles.boldLabel);
-						EditorGUILayout.BeginVertical("box");
-						EditorGUILayout.BeginHorizontal();
-							GUILayout.Label("",GUILayout.Width(3));
-							 if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-								if (!PreceduralAdd && !MaterialAdd && Precedural)
-									PreceduralAdd = Precedural;
+				////这段是添加纹理
+					//GUILayout.Label("Add / Replace / Substances Update" , EditorStyles.boldLabel);
+					EditorGUILayout.BeginVertical("box");
+				//		EditorGUILayout.BeginHorizontal();
+				//			GUILayout.Label("",GUILayout.Width(3));
+				//			 if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) 
+				//			 {
+				//				if (!PreceduralAdd && !MaterialAdd && Precedural)
+				//					PreceduralAdd = Precedural;
 					
-									if (PreceduralAdd){
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", PreceduralAdd.GetInputTexture("_MainTex"));
-									if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", PreceduralAdd.GetInputTexture ("_BumpMap"));
-									}else if (MaterialAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", MaterialAdd);
-									}
-									selProcedural = 0;
-									PreceduralAdd = null;
-									MaterialAdd=null;
-									IniNewSelect();
-							}
-							if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-								if (!PreceduralAdd && !MaterialAdd && Precedural)
-									PreceduralAdd = Precedural;
-								if (PreceduralAdd){
-								CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", PreceduralAdd.GetInputTexture ("_MainTex"));
-								if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
-									CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", PreceduralAdd.GetInputTexture ("_BumpMap"));
-								}else if (MaterialAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", MaterialAdd);
-									}
-									selProcedural = 1;
-									PreceduralAdd = null;
-									MaterialAdd=null;
-									IniNewSelect();
-							}
-							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2"))
-								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-									if (!PreceduralAdd && !MaterialAdd && Precedural)
-									PreceduralAdd = Precedural;
-									if (PreceduralAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", PreceduralAdd.GetInputTexture ("_MainTex"));
-										if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
-											CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", PreceduralAdd.GetInputTexture ("_BumpMap"));
-									}else if (MaterialAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", MaterialAdd);
-									}
-									selProcedural = 2;
-									PreceduralAdd = null;
-									MaterialAdd=null;
-									IniNewSelect();
-								}
-							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3"))
-								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-									if (!PreceduralAdd && !MaterialAdd && Precedural)
-									PreceduralAdd = Precedural;
-									if (PreceduralAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", PreceduralAdd.GetInputTexture ("_MainTex"));
-										if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
-											CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", PreceduralAdd.GetInputTexture ("_BumpMap"));
-									}else if (MaterialAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", MaterialAdd);
-									}
-									selProcedural = 3;
-									PreceduralAdd = null;
-									MaterialAdd=null;
-									IniNewSelect();
-								}
-							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4"))
-								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-									if (!PreceduralAdd && !MaterialAdd && Precedural)
-									PreceduralAdd = Precedural;
+				//					if (PreceduralAdd){
+				//					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", PreceduralAdd.GetInputTexture("_MainTex"));
+				//					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", PreceduralAdd.GetInputTexture ("_BumpMap"));
+				//					}else if (MaterialAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", MaterialAdd);
+				//					}
+				//					selProcedural = 0;
+				//					PreceduralAdd = null;
+				//					MaterialAdd=null;
+				//					IniNewSelect();
+				//			 }
+				//			if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+				//				if (!PreceduralAdd && !MaterialAdd && Precedural)
+				//					PreceduralAdd = Precedural;
+				//				if (PreceduralAdd){
+				//				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", PreceduralAdd.GetInputTexture ("_MainTex"));
+				//				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
+				//					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", PreceduralAdd.GetInputTexture ("_BumpMap"));
+				//				}else if (MaterialAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", MaterialAdd);
+				//					}
+				//					selProcedural = 1;
+				//					PreceduralAdd = null;
+				//					MaterialAdd=null;
+				//					IniNewSelect();
+				//			}
+				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2"))
+				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
+				//					PreceduralAdd = Precedural;
+				//					if (PreceduralAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", PreceduralAdd.GetInputTexture ("_MainTex"));
+				//						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
+				//							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", PreceduralAdd.GetInputTexture ("_BumpMap"));
+				//					}else if (MaterialAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", MaterialAdd);
+				//					}
+				//					selProcedural = 2;
+				//					PreceduralAdd = null;
+				//					MaterialAdd=null;
+				//					IniNewSelect();
+				//				}
+				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3"))
+				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
+				//					PreceduralAdd = Precedural;
+				//					if (PreceduralAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", PreceduralAdd.GetInputTexture ("_MainTex"));
+				//						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
+				//							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", PreceduralAdd.GetInputTexture ("_BumpMap"));
+				//					}else if (MaterialAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", MaterialAdd);
+				//					}
+				//					selProcedural = 3;
+				//					PreceduralAdd = null;
+				//					MaterialAdd=null;
+				//					IniNewSelect();
+				//				}
+				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4"))
+				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
+				//					PreceduralAdd = Precedural;
 					
-									if (PreceduralAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", PreceduralAdd.GetInputTexture ("_MainTex"));
-									}else if (MaterialAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", MaterialAdd);
-									}
-									selProcedural = 4;
-									PreceduralAdd = null;
-									MaterialAdd=null;
-									IniNewSelect();
-								}
-							if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5"))
-								if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-									if (!PreceduralAdd && !MaterialAdd && Precedural)
-									PreceduralAdd = Precedural;
+				//					if (PreceduralAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", PreceduralAdd.GetInputTexture ("_MainTex"));
+				//					}else if (MaterialAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", MaterialAdd);
+				//					}
+				//					selProcedural = 4;
+				//					PreceduralAdd = null;
+				//					MaterialAdd=null;
+				//					IniNewSelect();
+				//				}
+				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5"))
+				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
+				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
+				//					PreceduralAdd = Precedural;
 					
-									if (PreceduralAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", PreceduralAdd.GetInputTexture ("_MainTex"));
-								}else if (MaterialAdd){
-										CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", MaterialAdd);
-								}
-								selProcedural = 5;
-								PreceduralAdd = null;
-								MaterialAdd=null;
-								IniNewSelect();
-							}
+				//					if (PreceduralAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", PreceduralAdd.GetInputTexture ("_MainTex"));
+				//				}else if (MaterialAdd){
+				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", MaterialAdd);
+				//				}
+				//				selProcedural = 5;
+				//				PreceduralAdd = null;
+				//				MaterialAdd=null;
+				//				IniNewSelect();
+				//			}
 						
-						EditorGUILayout.EndHorizontal();
+				//		EditorGUILayout.EndHorizontal();
 				
 				
 					string AssetName= AssetDatabase.GetAssetPath(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural)) as string;
@@ -3141,6 +3190,8 @@ public class T4MSC : EditorWindow {
 	
 
 
+
+	//选择要使用的shader
 	void MyT4MApplyChange()
 	{
 		T4MselTexture = 0;
@@ -3911,8 +3962,6 @@ public class T4MSC : EditorWindow {
 	
 	void IniNewSelect()
 	{
-		
-			
 		if (UnityTerrain){
 			DestroyImmediate(UnityTerrain);
 			if(Child){
@@ -3933,146 +3982,160 @@ public class T4MSC : EditorWindow {
 			}
 		}
 		if (CurrentSelect && CurrentSelect.GetComponent <T4MObjSC>()  && CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial){
-				EditorUtility.SetSelectedWireframeHidden(CurrentSelect.GetComponent<Renderer>(), true);
-				initMaster = false;
-			
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0")){
-					Layer1 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0");
-					Layer1Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat0");
-				}else Layer1 =null;
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1")){
-					Layer2 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1");
-					Layer2Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat1");
-				}else Layer2 =null;
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
-					Layer3 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2");
-					Layer3Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat2");
-				}else Layer3 =null;
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
-					Layer4 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3");
-					Layer4Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat3");
-				}else Layer4 =null;
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
-					Layer5 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4");
-					Layer5Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat4");
-				}else Layer5 =null;
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
-					Layer6 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5");
-					Layer6Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat5");
-				}else Layer6 =null;
-				
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
-					Layer1Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat0");
-					Layer2Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat1");
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
-						Layer3Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat2");
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
-						Layer4Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat3");
-					
-				} 
-					if(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC") || CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC")){
-						LMMan = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Lightmap");
-					}
-					CheckShader();
-					ActivatedLOD =CurrentSelect.GetComponent <T4MObjSC>().EnabledLODSystem ;
-					ActivatedBillboard =	CurrentSelect.GetComponent <T4MObjSC>().enabledBillboard ;
-					MaximunView = CurrentSelect.GetComponent <T4MObjSC>().MaxViewDistance;
-					StartLOD2= CurrentSelect.GetComponent <T4MObjSC>().LOD2Start;
-					StartLOD3 = CurrentSelect.GetComponent <T4MObjSC>().LOD3Start;
-					UpdateInterval = CurrentSelect.GetComponent <T4MObjSC>().Interval;
-					PlayerCam = CurrentSelect.GetComponent <T4MObjSC>().PlayerCamera;
-					BillInterval = CurrentSelect.GetComponent <T4MObjSC>().BillInterval;
-					BillboardDist = CurrentSelect.GetComponent <T4MObjSC>().BillMaxViewDistance;
-					ActivatedLayerCul = CurrentSelect.GetComponent <T4MObjSC>().enabledLayerCul;
-					BGDistMaxView = CurrentSelect.GetComponent <T4MObjSC>().BackGroundView;
-					FarDistMaxView=CurrentSelect.GetComponent <T4MObjSC>().FarView;
-					NormalDistMaxView=CurrentSelect.GetComponent <T4MObjSC>().NormalView;
-					CloseDistMaxView=CurrentSelect.GetComponent <T4MObjSC>().CloseView;
-					if (CurrentSelect.GetComponent <T4MObjSC>().Mode == 1)
-						LODModeControler = LODMod.Mass_Control;
-					else LODModeControler = LODMod.Independent_Control;
-			
-					if(CurrentSelect.GetComponent <T4MObjSC>().Axis == 0)
-						BillBoardAxis = BillbAxe.Y_Axis;
-					else BillBoardAxis = BillbAxe.All_Axis;
-			
-					if(CurrentSelect.GetComponent <T4MObjSC>().LODbasedOnScript == true)
-						LODocclusion = OccludeBy.Max_View_Distance;
-					else LODocclusion = OccludeBy.Layer_Cull_Distances;
-			 
-			
-					if(CurrentSelect.GetComponent <T4MObjSC>().BilBbasedOnScript == true)
-						BilBocclusion = OccludeBy.Max_View_Distance;
-					else BilBocclusion = OccludeBy.Layer_Cull_Distances;
-					
-					
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().BillboardPosition != null && CurrentSelect.gameObject.GetComponent <T4MObjSC>().BillboardPosition.Length>0)
-						billActivate = true;
-					else billActivate = false;
-					
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().ObjPosition != null && CurrentSelect.gameObject.GetComponent <T4MObjSC>().ObjPosition.Length>0)
-						LodActivate = true;
-					else LodActivate = false;
-			
-			
-					if (PlayerCam == null && Camera.main)
-						PlayerCam = Camera.main.transform;
-					else if (PlayerCam == null && !Camera.main){
-						Camera[] Cam =  GameObject.FindObjectsOfType(typeof(Camera)) as Camera[];
-						for (var b =0; b <Cam.Length;b++){
-							if (Cam[b].GetComponent<AudioListener>()){
-								PlayerCam = Cam[b].transform; 
-							}
-						}
-					}
-			
-			
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_SpecColor")){
-					
-					ShinessColor = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetColor("_SpecColor");
-					
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL0")){
-						shiness0 = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL0");
-					}
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL1")){
-						shiness1 = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL1");
-					}
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL2")){
-						shiness2 = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL2");
-					}
-					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL3")){
-						shiness3 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL3");
-					}
-				}
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Control2") && CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control2"))
-					T4MMaskTex2 = (Texture2D)CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control2");
-				else T4MMaskTex2 = null;
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Control"))
+			EditorUtility.SetSelectedWireframeHidden(CurrentSelect.GetComponent<Renderer>(), true);
+			initMaster = false;
+			if (LayerTile == null)
+				LayerTile = new Vector2[16];
+			if (Layer == null)
+				Layer = new Texture[16];
+			for (int i = 0; i < 16; ++i)
+            {
+				String myIndex = i.ToString();
+				if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat" + myIndex))
 				{
-					T4MMaskTexUVCoord = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Control").x;
-					//从shader取得权重图
-					T4MMaskTex = (Texture2D)CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control");
-					intialized=true;
-					
+					Layer[i] = CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat" + myIndex);
+					LayerTile[i] = CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTextureScale("_Splat" + myIndex);
 				}
+				else Layer[i] = null;
+			}
+
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0")){
+			//	Layer1 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0");
+			//	Layer1Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat0");
+			//}else Layer1 =null;
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1")){
+			//	Layer2 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1");
+			//	Layer2Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat1");
+			//}else Layer2 =null;
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
+			//	Layer3 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2");
+			//	Layer3Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat2");
+			//}else Layer3 =null;
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
+			//	Layer4 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3");
+			//	Layer4Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat3");
+			//}else Layer4 =null;
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
+			//	Layer5 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4");
+			//	Layer5Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat4");
+			//}else Layer5 =null;
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
+			//	Layer6 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5");
+			//	Layer6Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat5");
+			//}else Layer6 =null;
 			
+			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
+				Layer1Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat0");
+				Layer2Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat1");
+				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
+					Layer3Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat2");
+				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
+					Layer4Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat3");
+				
+			} 
+			if(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC") || CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC")){
+				LMMan = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Lightmap");
+			}
+			CheckShader();
+			ActivatedLOD =CurrentSelect.GetComponent <T4MObjSC>().EnabledLODSystem ;
+			ActivatedBillboard =	CurrentSelect.GetComponent <T4MObjSC>().enabledBillboard ;
+			MaximunView = CurrentSelect.GetComponent <T4MObjSC>().MaxViewDistance;
+			StartLOD2= CurrentSelect.GetComponent <T4MObjSC>().LOD2Start;
+			StartLOD3 = CurrentSelect.GetComponent <T4MObjSC>().LOD3Start;
+			UpdateInterval = CurrentSelect.GetComponent <T4MObjSC>().Interval;
+			PlayerCam = CurrentSelect.GetComponent <T4MObjSC>().PlayerCamera;
+			BillInterval = CurrentSelect.GetComponent <T4MObjSC>().BillInterval;
+			BillboardDist = CurrentSelect.GetComponent <T4MObjSC>().BillMaxViewDistance;
+			ActivatedLayerCul = CurrentSelect.GetComponent <T4MObjSC>().enabledLayerCul;
+			BGDistMaxView = CurrentSelect.GetComponent <T4MObjSC>().BackGroundView;
+			FarDistMaxView=CurrentSelect.GetComponent <T4MObjSC>().FarView;
+			NormalDistMaxView=CurrentSelect.GetComponent <T4MObjSC>().NormalView;
+			CloseDistMaxView=CurrentSelect.GetComponent <T4MObjSC>().CloseView;
+			if (CurrentSelect.GetComponent <T4MObjSC>().Mode == 1)
+				LODModeControler = LODMod.Mass_Control;
+			else LODModeControler = LODMod.Independent_Control;
+			
+			if(CurrentSelect.GetComponent <T4MObjSC>().Axis == 0)
+				BillBoardAxis = BillbAxe.Y_Axis;
+			else BillBoardAxis = BillbAxe.All_Axis;
+			
+			if(CurrentSelect.GetComponent <T4MObjSC>().LODbasedOnScript == true)
+				LODocclusion = OccludeBy.Max_View_Distance;
+			else LODocclusion = OccludeBy.Layer_Cull_Distances;
+			
+			
+			if(CurrentSelect.GetComponent <T4MObjSC>().BilBbasedOnScript == true)
+				BilBocclusion = OccludeBy.Max_View_Distance;
+			else BilBocclusion = OccludeBy.Layer_Cull_Distances;
+			
+			
+			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().BillboardPosition != null && CurrentSelect.gameObject.GetComponent <T4MObjSC>().BillboardPosition.Length>0)
+				billActivate = true;
+			else billActivate = false;
+			
+			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().ObjPosition != null && CurrentSelect.gameObject.GetComponent <T4MObjSC>().ObjPosition.Length>0)
+				LodActivate = true;
+			else LodActivate = false;
+			
+			
+			if (PlayerCam == null && Camera.main)
+				PlayerCam = Camera.main.transform;
+			else if (PlayerCam == null && !Camera.main){
+				Camera[] Cam =  GameObject.FindObjectsOfType(typeof(Camera)) as Camera[];
+				for (var b =0; b <Cam.Length;b++){
+					if (Cam[b].GetComponent<AudioListener>()){
+						PlayerCam = Cam[b].transform; 
+					}
+				}
+			}
+			
+			
+			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_SpecColor"))
+			{
+				
+				ShinessColor = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetColor("_SpecColor");
+				
+				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL0")){
+					shiness0 = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL0");
+				}
+				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL1")){
+					shiness1 = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL1");
+				}
+				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL2")){
+					shiness2 = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL2");
+				}
+				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_ShininessL3")){
+					shiness3 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_ShininessL3");
+				}
+			}
+			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Control2") && CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control2"))
+				T4MMaskTex2 = (Texture2D)CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control2");
+			else T4MMaskTex2 = null;
+			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Control"))
+			{
+				T4MMaskTexUVCoord = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Control").x;
+				//从shader取得权重图
+				T4MMaskTex = (Texture2D)CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control");
+				intialized=true;
 				
 			}
-			Projector[] projectorObj = FindObjectsOfType(typeof(Projector)) as Projector[];
-			if(projectorObj.Length>0)
-			for (var i = 0; i < projectorObj.Length; i++)
-			{
-						if (projectorObj[i].gameObject.name == "PreviewT4M")
-						DestroyImmediate (projectorObj[i].gameObject);
-			}
-			terrainDat = null;
-			vertexInfo = 0;
-			trisInfo= 0;
-			partofT4MObj = 0;
-			TexTexture = null;
 			
+			
+		}
+		Projector[] projectorObj = FindObjectsOfType(typeof(Projector)) as Projector[];
+		if(projectorObj.Length>0)
+		for (var i = 0; i < projectorObj.Length; i++)
+		{
+					if (projectorObj[i].gameObject.name == "PreviewT4M")
+					DestroyImmediate (projectorObj[i].gameObject);
+		}
+		terrainDat = null;
+		vertexInfo = 0;
+		trisInfo= 0;
+		partofT4MObj = 0;
+		TexTexture = null;	
+
 		T4MSelectID = Selection.activeInstanceID;
-		
 	}
 	
 	void CheckShader(){
