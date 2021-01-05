@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MyTerrtain
-  m_Shader: {fileID: 4800000, guid: f2f6b6e39e980504893d05edd3d25b1b, type: 3}
+  m_Shader: {fileID: 4800000, guid: 387af32e2462134488f8305627c56786, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,6 +39,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: fdd13f527c5e4064ab7a490f7d2c83ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Control3:
+        m_Texture: {fileID: 2800000, guid: c1c6a210ddb8a844ea3ee67f4a9159de, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Control4:
+        m_Texture: {fileID: 2800000, guid: 056cfd4cba048aa469f86fc1f3f03107, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -67,11 +75,24 @@ Material:
         m_Texture: {fileID: 2800000, guid: 283fc09a43cc87441afc603913fe1dc9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Splat6:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat7:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat8:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ShininessL0: 0.078125
     - _ShininessL1: 0.078125
     - _ShininessL2: 0.078125
     m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tiling3: {r: 1, g: 1, b: 0, a: 0}
     - _Tiling4: {r: 1, g: 1, b: 0, a: 0}
