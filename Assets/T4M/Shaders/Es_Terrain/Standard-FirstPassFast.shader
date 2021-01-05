@@ -3,27 +3,6 @@
 Shader "Custom/Es_Terrain/StandardFast" {
 	Properties {
 		// set by terrain engine
-<<<<<<< HEAD
-		_Control ("Control (RGBA)", 2D) = "red" {}
-		_Splat3 ("Layer 3 (A)", 2D) = "white" {}
-		_Splat2 ("Layer 2 (B)", 2D) = "white" {}
-		_Splat1 ("Layer 1 (G)", 2D) = "white" {}
-		_Splat0 ("Layer 0 (R)", 2D) = "white" {}
-		_Normal3 ("Normal 3 (A)", 2D) = "bump" {}
-		_Normal2 ("Normal 2 (B)", 2D) = "bump" {}
-		_Normal1 ("Normal 1 (G)", 2D) = "bump" {}
-		_Normal0 ("Normal 0 (R)", 2D) = "bump" {}
-		[Gamma] _Metallic0 ("Metallic 0", Range(0.0, 1.0)) = 0.0	
-		[Gamma] _Metallic1 ("Metallic 1", Range(0.0, 1.0)) = 0.0	
-		[Gamma] _Metallic2 ("Metallic 2", Range(0.0, 1.0)) = 0.0	
-		[Gamma] _Metallic3 ("Metallic 3", Range(0.0, 1.0)) = 0.0
-		_Smoothness0 ("Smoothness 0", Range(0.0, 1.0)) = 1.0	
-		_Smoothness1 ("Smoothness 1", Range(0.0, 1.0)) = 1.0	
-		_Smoothness2 ("Smoothness 2", Range(0.0, 1.0)) = 1.0	
-		_Smoothness3 ("Smoothness 3", Range(0.0, 1.0)) = 1.0
-
-
-=======
 		[HideInInspector] _Control ("Control (RGBA)", 2D) = "red" {}
 		[HideInInspector] _Splat3 ("Layer 3 (A)", 2D) = "white" {}
 		[HideInInspector] _Splat2 ("Layer 2 (B)", 2D) = "white" {}
@@ -41,7 +20,6 @@ Shader "Custom/Es_Terrain/StandardFast" {
 		[HideInInspector] _Smoothness1 ("Smoothness 1", Range(0.0, 1.0)) = 1.0	
 		[HideInInspector] _Smoothness2 ("Smoothness 2", Range(0.0, 1.0)) = 1.0	
 		[HideInInspector] _Smoothness3 ("Smoothness 3", Range(0.0, 1.0)) = 1.0
->>>>>>> 6ec3da6507f4ab3ad1dd7ee0ccdd4eed930e5e25
 
 		// used in fallback on old cards & base map
 		[HideInInspector] _MainTex ("BaseMap (RGB)", 2D) = "white" {}
@@ -55,28 +33,6 @@ Shader "Custom/Es_Terrain/StandardFast" {
 		}
 
 		CGPROGRAM
-<<<<<<< HEAD
-
-		/*[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]
-		[HideInInspector]*/
-
-=======
->>>>>>> 6ec3da6507f4ab3ad1dd7ee0ccdd4eed930e5e25
 		#pragma surface surf Standard vertex:SplatmapVert finalcolor:SplatmapFinalColor finalgbuffer:SplatmapFinalGBuffer fullforwardshadows noinstancing
 		#pragma multi_compile_fog
 		#pragma target 3.0
@@ -89,10 +45,6 @@ Shader "Custom/Es_Terrain/StandardFast" {
 			// TODO : On d3d9 17 samplers would be used when : defined(SHADOWS_SCREEN) && defined(LIGHTMAP_ON) && defined(DIRLIGHTMAP_COMBINED) && defined(DYNAMICLIGHTMAP_ON) && defined(SHADOWS_SHADOWMASK) && defined(_TERRAIN_NORMAL_MAP) && defined(UNITY_SPECCUBE_BLENDING)
 			// In that case it would be probably acceptable to undef UNITY_SPECCUBE_BLENDING however at the moment (10/2/2016) we can't undef UNITY_SPECCUBE_BLENDING or other platform defines. CGINCLUDE being added after "Lighting.cginc".
 			// For now, remove _TERRAIN_NORMAL_MAP in this case.
-<<<<<<< HEAD
-			
-=======
->>>>>>> 6ec3da6507f4ab3ad1dd7ee0ccdd4eed930e5e25
 			#undef _TERRAIN_NORMAL_MAP
 			#define DONT_USE_TERRAIN_NORMAL_MAP // use it to initialize o.Normal to (0,0,1) because the surface shader analysis still see this shader writes to per-pixel normal.
 		#endif
