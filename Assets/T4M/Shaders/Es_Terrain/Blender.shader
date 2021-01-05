@@ -65,15 +65,20 @@
                 int idy = id1 / 4 / 2;
 
                 float4 Weight = tex2D(_WeightTex, i.uvw + float2(idx*0.5, idy*0.5));
-                float Weight1 = getChannelValue(Weight, IdCoord.g * 16 % 4);
+                float Weight1 = getChannelValue(Weight, id1 % 4);
 
                 idx = id2 / 4 % 2;
                 idy = id2 / 4 / 2;
 
                 Weight = tex2D(_WeightTex, i.uvw + float2(idx*0.5, idy*0.5));
-                float Weight2 = getChannelValue(Weight, IdCoord.b * 16 % 4);
+                float Weight2 = getChannelValue(Weight, id2 % 4);
+
+                idx = id0 / 4 % 2;
+                idy = id0 / 4 / 2;
 
                 float Weight0 = 1 - Weight1 - Weight2;
+                /*Weight = tex2D(_WeightTex, i.uvw + float2(idx * 0.5, idy * 0.5));
+                float Weight0 = getChannelValue(Weight, id0 % 4);*/
                 
                 // return fixed4(Weight1, Weight2, Weight3, 1.0);
                 float2 worldScale = i.worldpos.xz * _BlockScale;

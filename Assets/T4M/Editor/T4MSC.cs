@@ -146,7 +146,9 @@ public class T4MSC : EditorWindow {
 	string[] BillMenu = {"Billboard Manager", "Billboard Creator"};
 	string PrefabName = "Name";
 	string CheckStatus;
-		
+
+
+	int Resultresolution;
 	int tCount;
 	int counter;
     int totalCount;
@@ -3552,9 +3554,10 @@ public class T4MSC : EditorWindow {
 	//改
 	void CreateControl2Text(string Index)
 	{
-		Texture2D Control = new Texture2D (512, 512,  TextureFormat.ARGB32, true);
+		Resultresolution = 512;
+		Texture2D Control = new Texture2D (Resultresolution, Resultresolution,  TextureFormat.ARGB32, true);
 		//第二张权重图，默认应该是纯黑的
-		Color[] ColorBase = new Color[512 * 512];
+		Color[] ColorBase = new Color[Resultresolution * Resultresolution];
 		for (var t = 0; t < ColorBase.Length; t++) {
 				ColorBase[t] = new Color(0, 0, 0, 0);
 		}
@@ -3723,8 +3726,8 @@ public class T4MSC : EditorWindow {
 			}
 		}else{ 
 			//自己生成一张
-			Texture2D NewMaskText = new Texture2D (512, 512,  TextureFormat.RGBA32, true);
-			Color[] ColorBase = new Color[512 * 512];
+			Texture2D NewMaskText = new Texture2D (Resultresolution, Resultresolution,  TextureFormat.RGBA32, true);
+			Color[] ColorBase = new Color[Resultresolution * Resultresolution];
 			for (var t = 0; t < ColorBase.Length; t++) {
 					ColorBase[t] = new Color (1, 0, 0, 0);
 			}
@@ -3904,8 +3907,8 @@ public class T4MSC : EditorWindow {
 		
 
 		//生成一张纯红的权重图
-		Texture2D NewMaskText = new Texture2D (512, 512,  TextureFormat.RGBA32, true);
-		Color[] ColorBase  = new Color[512 * 512];
+		Texture2D NewMaskText = new Texture2D (Resultresolution, Resultresolution,  TextureFormat.RGBA32, true);
+		Color[] ColorBase  = new Color[Resultresolution * Resultresolution];
 		for (var t = 0; t < ColorBase.Length; t++) {
 				ColorBase[t] = new Color (1, 0, 0, 0);
 		}

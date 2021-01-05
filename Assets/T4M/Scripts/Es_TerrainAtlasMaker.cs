@@ -158,15 +158,15 @@ namespace Utility
             char indx = '\0';
             Texture2D[] MySplat = new Texture2D[4];
 
-            Color[] DefualtColors = new Color[512*512];
-            int len = DefualtColors.Length;
-            for(int i = 0; i < len; ++i)
-                DefualtColors[i] = new Color(0, 0, 0, 0);
-
             int wid = ((Texture2D)myMaterial.GetTexture("_Control" + indx)).width;
             int hei = ((Texture2D)myMaterial.GetTexture("_Control" + indx)).height;
 
-            for(int i = 0; i < 4; ++i)
+            Color[] DefualtColors = new Color[wid * hei];
+            int len = DefualtColors.Length;
+            for (int i = 0; i < len; ++i)
+                DefualtColors[i] = new Color(0, 0, 0, 0);
+
+            for (int i = 0; i < 4; ++i)
             {
                 string tmp = "_Control" + indx;
                 if(i == 0)
@@ -174,14 +174,14 @@ namespace Utility
                 if(myMaterial.HasProperty(tmp))
                 {
                     colors.Add(((Texture2D)myMaterial.GetTexture(tmp)).GetPixels());
-                    MySplat[i] = new Texture2D (512, 512,  TextureFormat.ARGB32, true);
+                    MySplat[i] = new Texture2D (wid, hei,  TextureFormat.ARGB32, true);
                     MySplat[i] = (Texture2D)myMaterial.GetTexture(tmp);
                     // File.WriteAllBytes(Application.dataPath+"/"+ tmp +".png",MySplat[i].EncodeToPNG());
                 }
                 else
                 {
                     //colors.Add(DefualtColors);
-                    MySplat[i] = new Texture2D (512, 512,  TextureFormat.ARGB32, true);
+                    MySplat[i] = new Texture2D (wid, hei,  TextureFormat.ARGB32, true);
                     MySplat[i].SetPixels(DefualtColors);
                 }
                 if(i == 0)
@@ -194,7 +194,7 @@ namespace Utility
             //     colors.Add(normalTerrainData.alphamapTextures[i].GetPixels());
             // }
 
-            splatID = new Texture2D(wid, hei, TextureFormat.RGB24, false, true);
+            splatID = new Texture2D(wid, hei, TextureFormat.ARGB32, false, true);
 
             splatID.filterMode = FilterMode.Point;
 
