@@ -20,7 +20,11 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+<<<<<<< HEAD
   isReadable: 1
+=======
+  isReadable: 0
+>>>>>>> 6ec3da6507f4ab3ad1dd7ee0ccdd4eed930e5e25
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
@@ -83,6 +87,7 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+<<<<<<< HEAD
   - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 1024
@@ -95,6 +100,8 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+=======
+>>>>>>> 6ec3da6507f4ab3ad1dd7ee0ccdd4eed930e5e25
   spriteSheet:
     serializedVersion: 2
     sprites: []
