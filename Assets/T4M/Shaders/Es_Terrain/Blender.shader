@@ -96,7 +96,7 @@
                 float4 col2 = tex2D(_BlockMainTex, uv2, dx, dy);
 
                 float4 diffuseColor = col0 * Weight0 + col1 * Weight1 + col2 * Weight2;
-                return fixed4(diffuseColor.rgb, 1);
+                //return fixed4(col0.rgb, 1);
                 //return fixed4(SamplerCoord.xyz, 1.0);
 
                 // float2 twoVerticalIndices;

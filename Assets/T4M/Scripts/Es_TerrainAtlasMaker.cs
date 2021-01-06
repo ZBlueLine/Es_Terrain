@@ -15,17 +15,17 @@ namespace Utility
         {
             Texture2D[] TextureList = new Texture2D[16];
             int sqrCount = 4;
-            char id = '0';
+            int id = 0;
             Color[] Colors = new Color[256*256];
             int len = Colors.Length;
             for(int i = 0; i < len; ++i)
                 Colors[i] = new Color(0, 0, 0, 0);
             for(int i = 0; i < 16; ++i)
             {
-                if (myMaterial.HasProperty("_Splat" + id))
+                if (myMaterial.HasProperty("_Splat" + id.ToString()))
                 {
                     Debug.Log("_Splat" + id);
-                    TextureList[i] = (Texture2D)myMaterial.GetTexture("_Splat" + id);
+                    TextureList[i] = (Texture2D)myMaterial.GetTexture("_Splat" + id.ToString());
                 }
                 else
                 {

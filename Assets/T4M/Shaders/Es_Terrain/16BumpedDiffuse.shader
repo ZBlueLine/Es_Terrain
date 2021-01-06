@@ -45,42 +45,31 @@ Shader "Es_Terrain/16 Bumped Diffuse" {
 			#include "Lighting.cginc"
 			#include "AutoLight.cginc"
 
-			sampler2D _Control;
-			sampler2D _Control2;
-			sampler2D _Control3;
-			sampler2D _Control4;
+			Texture2D  _Control;
+			Texture2D  _Control2;
+			Texture2D  _Control3;
+			Texture2D  _Control4;
 
-			sampler2D _BumpMap;
-			sampler2D _Splat0;
-			sampler2D _Splat1;
-			sampler2D _Splat2;
-			sampler2D _Splat3;
-			sampler2D _Splat4;
-			sampler2D _Splat5;
-			sampler2D _Splat6;
-			sampler2D _Splat7;
-			sampler2D _Splat8;
-
-
-			float4 _MainTex_ST;
+			sampler2D  _BumpMap;
 			float4 _BumpMap_ST;
-			float4 _Splat0_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Splat4_ST;
-			float4 _Splat5_ST;
-			float4 _Splat6_ST;
-			float4 _Splat7_ST;
-			float4 _Splat8_ST;
-			float4 _Splat9_ST;
-			float4 _Splat10_ST;
-			float4 _Splat11_ST;
-			float4 _Splat12_ST;
-			float4 _Splat13_ST;
-			float4 _Splat14_ST;
-			float4 _Splat15_ST;
 
+			Texture2D _Splat0;
+			Texture2D _Splat1;
+			Texture2D _Splat2;
+			Texture2D _Splat3;
+			Texture2D _Splat4;
+			Texture2D _Splat5;
+			Texture2D _Splat6;
+			Texture2D _Splat7;
+			Texture2D _Splat8;
+			Texture2D _Splat9;
+			Texture2D _Splat10;
+			Texture2D _Splat11;
+			Texture2D _Splat12;
+			Texture2D _Splat13;
+			Texture2D _Splat14;
+			Texture2D _Splat15;
+			SamplerState  sampler_Control;
 			fixed4 _Color;
 
 
@@ -97,6 +86,7 @@ Shader "Es_Terrain/16 Bumped Diffuse" {
 				float4 TtoW0 : TEXCOORD1;  
 				float4 TtoW1 : TEXCOORD2;  
 				float4 TtoW2 : TEXCOORD3;
+				SHADOW_COORDS(4)
 			};
 			
 			v2f vert(a2v v) {
@@ -104,7 +94,7 @@ Shader "Es_Terrain/16 Bumped Diffuse" {
 				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv.xy = v.texcoord.xy;
 
-				o.uv.zw = v.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;
+				o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 				
 				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;  
 				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);  
@@ -123,21 +113,28 @@ Shader "Es_Terrain/16 Bumped Diffuse" {
 				fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
-				fixed4 Cid1 = tex2D(_Control, i.uv.xy);
-				fixed4 Cid2 = tex2D(_Control2, i.uv.xy);
-				fixed4 Cid3 = tex2D(_Control3, i.uv.xy);
-				fixed4 Cid4 = tex2D(_Control4, i.uv.xy);
+				fixed4 Cid1 = _Control.Sample(sampler_Control, i.uv.xy);
+				fixed4 Cid2 = _Control2.Sample(sampler_Control, i.uv.xy);
+				fixed4 Cid3 = _Control3.Sample(sampler_Control, i.uv.xy);
+				fixed4 Cid4 = _Control4.Sample(sampler_Control, i.uv.xy);
 
 
-				fixed3 Splat_color0 = tex2D(_Splat0, i.uv.xy * _Splat0_ST);
-				fixed3 Splat_color1 = tex2D(_Splat1, i.uv.xy * _Splat1_ST);
-				fixed3 Splat_color2 = tex2D(_Splat2, i.uv.xy * _Splat2_ST);
-				fixed3 Splat_color3 = tex2D(_Splat3, i.uv.xy * _Splat3_ST);
-				fixed3 Splat_color4 = tex2D(_Splat4, i.uv.xy * _Splat4_ST);
-				fixed3 Splat_color5 = tex2D(_Splat5, i.uv.xy * _Splat5_ST);
-				fixed3 Splat_color6 = tex2D(_Splat6, i.uv.xy * _Splat6_ST);
-				fixed3 Splat_color7 = tex2D(_Splat7, i.uv.xy * _Splat7_ST);
-				fixed3 Splat_color8 = tex2D(_Splat8, i.uv.xy * _Splat8_ST);
+				fixed4 Splat_color0 = _Splat0.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color1 = _Splat1.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color2 = _Splat2.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color3 = _Splat3.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color4 = _Splat4.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color5 = _Splat5.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color6 = _Splat6.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color7 = _Splat7.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color8 = _Splat8.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color9 = _Splat9.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color10 = _Splat10.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color11 = _Splat11.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color12 = _Splat12.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color13 = _Splat13.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color14 = _Splat14.Sample(sampler_Control, i.uv.xy);
+				fixed3 Splat_color15 = _Splat15.Sample(sampler_Control, i.uv.xy);
 
 
 				fixed3 albedo = Cid1.r * Splat_color0.rgb;
@@ -150,6 +147,13 @@ Shader "Es_Terrain/16 Bumped Diffuse" {
 				albedo += Cid2.b * Splat_color6.rgb;
 				albedo += Cid2.a * Splat_color7.rgb;
 				albedo += Cid3.r * Splat_color8.rgb;
+				albedo += Cid3.g * Splat_color9.rgb;
+				albedo += Cid3.b * Splat_color10.rgb;
+				albedo += Cid3.a * Splat_color11.rgb;
+				albedo += Cid4.r * Splat_color12.rgb;
+				albedo += Cid4.g * Splat_color13.rgb;
+				albedo += Cid4.b * Splat_color14.rgb;
+				albedo += Cid4.a * Splat_color15.rgb;
 
 
 				fixed3 bump = UnpackNormal(tex2D(_BumpMap, i.uv.zw));
