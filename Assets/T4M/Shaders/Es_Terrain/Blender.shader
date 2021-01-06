@@ -56,9 +56,9 @@
 
                 fixed4 IdCoord = tex2D(_IDTex, i.uv);
                 
-                int id0 = IdCoord.r * 16;
-                int id1 = IdCoord.g * 16;
-                int id2 = IdCoord.b * 16;
+                int id0 = round(IdCoord.r * 16);
+                int id1 = round(IdCoord.g * 16);
+                int id2 = round(IdCoord.b * 16);
 
                 i.uvw *= 0.5f;
                 int idx = id1 / 4 % 2;
