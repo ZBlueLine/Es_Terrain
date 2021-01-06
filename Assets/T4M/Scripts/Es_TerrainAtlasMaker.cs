@@ -14,12 +14,13 @@ namespace Utility
         static public void MakeAlbedoAtlas(Material myMaterial, string name)
         {
             Texture2D[] TextureList = new Texture2D[16];
+            Texture2D[] NormalList = new Texture2D[16];
             int sqrCount = 4;
             int id = 0;
             Color[] Colors = new Color[256*256];
             int len = Colors.Length;
             for(int i = 0; i < len; ++i)
-                Colors[i] = new Color(0, 0, 0, 0);
+                Colors[i] = new Color(1, 1, 1, 1);
             for(int i = 0; i < 16; ++i)
             {
                 if (myMaterial.HasProperty("_Splat" + id.ToString()))
@@ -32,6 +33,17 @@ namespace Utility
                     Debug.Log(i);
 		            TextureList[i] = new Texture2D (256, 256,  TextureFormat.ARGB32, true);
                     TextureList[i].SetPixels(Colors);
+                }
+                if (myMaterial.HasProperty("_BumpSplat" + id.ToString()))
+                {
+                    Debug.Log("_BumpSplat" + id);
+                    NormalList[i] = (Texture2D)myMaterial.GetTexture("_BumpSplat" + id.ToString());
+                }
+                else
+                {
+                    Debug.Log(i);
+                    NormalList[i] = new Texture2D(256, 256, TextureFormat.ARGB32, true);
+                    NormalList[i].SetPixels(Colors);
                 }
                 ++id;
             }
@@ -48,8 +60,10 @@ namespace Utility
                 {
                     int index = i * sqrCount + j;
 
-                    if (index >= TextureList.Length) break;
-                    copyToAltas(TextureList[index], albedoAtlas, i, j, wid, hei);
+                    if (TextureList[index] != null)
+                        copyToAltas(TextureList[index], albedoAtlas, i, j, wid, hei);
+                    if (NormalList[index] != null)
+                        copyToAltas(NormalList[index], normalAtlas, i, j, wid, hei);
                     //copyToAltas(normalTerrainData.splatPrototypes[index].normalMap, normalAtlas, i, j, wid, hei);
                 }
             }

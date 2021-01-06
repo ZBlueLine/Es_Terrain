@@ -2,6 +2,7 @@
 {
     Properties{
         _BlockMainTex("Block MainTexture", 2D) = "white" {}
+        _NormalTex("Normal Texture", 2D) = "white"
         _WeightTex("Weight Texture", 2D) = "white" {}
         _IDTex("ID Texture", 2D) = "white" {}
         _Color("Color", Color) = (1, 1, 1, 1)
@@ -96,28 +97,7 @@
                 float4 col2 = tex2D(_BlockMainTex, uv2, dx, dy);
 
                 float4 diffuseColor = col0 * Weight0 + col1 * Weight1 + col2 * Weight2;
-                //return fixed4(col0.rgb, 1);
-                //return fixed4(SamplerCoord.xyz, 1.0);
 
-                // float2 twoVerticalIndices;
-                // float2 twoHorizontalIndices;
-                // twoVerticalIndices = floor(SamplerCoord.rg * 16.0);
-                // twoHorizontalIndices = (floor(SamplerCoord.rg * 256.0)) - (twoVerticalIndices.xy * 16);
-                // //return fixed4(twoVerticalIndices.y, 0, 0, 1.0);
-                // float4 decodeIndices;
-                // decodeIndices.x = twoVerticalIndices.x;
-                // decodeIndices.y = twoHorizontalIndices.x;
-                // decodeIndices.z = twoVerticalIndices.y;
-                // decodeIndices.w = twoHorizontalIndices.y;
-                // decodeIndices = floor(decodeIndices/4)/4;
-                
-
-
-                // float2 uv0 = worldUv + decodeIndices.yx;
-                // float2 uv1 = worldUv + decodeIndices.wz;
-                
-
-                // float4 diffuseColor = lerp(col0, col1, blendRatio);
                 fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.rgb * _Color.rgb;
                 fixed3 diffuse = _LightColor0.rgb * diffuseColor.rgb * max(0, dot(i.normal, worldSpaceLightDir));
                 return fixed4(diffuse, 1.0);

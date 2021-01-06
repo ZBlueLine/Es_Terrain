@@ -189,7 +189,7 @@ public class T4MSC : EditorWindow {
 	T4MObjSC[] T4MObjCounter;
 
 	Texture[] Layer = new Texture[16];
-	Texture[] LayerBump;
+	Texture[] LayerBump = new Texture[16];
 	//Texture Layer1;
 	//Texture Layer2;
 	//Texture Layer3;
@@ -2752,6 +2752,7 @@ public class T4MSC : EditorWindow {
             CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat" + myIndex, Layer[selProcedural]);
             if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat" + myIndex))
             {
+				Debug.Log(myIndex);
                 GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
                 LayerBump[selProcedural] = EditorGUILayout.ObjectField(LayerBump[selProcedural], typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
                 CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat" + myIndex, LayerBump[selProcedural]);
@@ -2759,101 +2760,7 @@ public class T4MSC : EditorWindow {
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
-        //if (selProcedural == 0)
-        //{
-        //    //if(Layer1){
-        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
-        //    GUILayout.BeginHorizontal("Box");
-        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
-        //    Layer1 = EditorGUILayout.ObjectField(Layer1, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat0", Layer1);
-        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
-        //    {
-        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
-        //        Layer1Bump = EditorGUILayout.ObjectField(Layer1Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", Layer1Bump);
-        //    }
-        //    GUILayout.FlexibleSpace();
-        //    GUILayout.EndHorizontal();
-        //    //}
-        //}
-        //else if (selProcedural == 1)
-        //{
-        //    //if(Layer2){
-        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
-        //    GUILayout.BeginHorizontal("Box");
-        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
-        //    Layer2 = EditorGUILayout.ObjectField(Layer2, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat1", Layer2);
-        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
-        //    {
-        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
-        //        Layer2Bump = EditorGUILayout.ObjectField(Layer2Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", Layer2Bump);
-        //    }
-        //    GUILayout.FlexibleSpace();
-        //    GUILayout.EndHorizontal();
-        //    //}	
-        //}
-        //else if (selProcedural == 2)
-        //{
-        //    //if(Layer3){
-        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
-        //    GUILayout.BeginHorizontal("Box");
-        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
-        //    Layer3 = EditorGUILayout.ObjectField(Layer3, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat2", Layer3);
-        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
-        //    {
-        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
-        //        Layer3Bump = EditorGUILayout.ObjectField(Layer3Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", Layer3Bump);
-        //    }
-        //    GUILayout.FlexibleSpace();
-        //    GUILayout.EndHorizontal();
-        //    //}
-        //}
-        //else if (selProcedural == 3)
-        //{
-        //    //if(Layer4){
-        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
-        //    GUILayout.BeginHorizontal("Box");
-        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
-        //    Layer4 = EditorGUILayout.ObjectField(Layer4, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat3", Layer4);
-        //    if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
-        //    {
-        //        GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
-        //        Layer4Bump = EditorGUILayout.ObjectField(Layer4Bump, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //        CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", Layer4Bump);
-
-        //    }
-        //    GUILayout.FlexibleSpace();
-        //    GUILayout.EndHorizontal();
-        //    //}
-        //}
-        //else if (selProcedural == 4)
-        //{
-        //    //if(Layer5){	
-        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
-        //    GUILayout.BeginHorizontal("Box");
-        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
-        //    Layer5 = EditorGUILayout.ObjectField(Layer5, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat4", Layer5);
-        //    GUILayout.FlexibleSpace();
-        //    GUILayout.EndHorizontal();
-        //    //}
-        //}
-        //else if (selProcedural == 5)
-        //{
-        //    //if(Layer6){
-        //    GUILayout.Label("Modify", EditorStyles.boldLabel);
-        //    GUILayout.BeginHorizontal("Box");
-        //    GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TDiff.jpg", typeof(Texture)));
-        //    Layer6 = EditorGUILayout.ObjectField(Layer6, typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
-        //    CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat5", Layer6);
-        //    //}
-        //}
+        
 
         if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC") || CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC")){
 				GUILayout.Label("Manual Lightmap Add" , EditorStyles.boldLabel);
@@ -4064,18 +3971,20 @@ public class T4MSC : EditorWindow {
 					Layer[i] = CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat" + myIndex);
 					LayerTile[i] = CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTextureScale("_Splat" + myIndex);
 				}
+				else if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat" + myIndex))
+                    LayerBump[i] = CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat" + myIndex);
 				else Layer[i] = null;
 			}
 			
-			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
-				Layer1Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat0");
-				Layer2Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat1");
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
-					Layer3Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat2");
-				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
-					Layer4Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat3");
+			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
+			//	Layer1Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat0");
+			//	Layer2Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat1");
+			//	if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
+			//		Layer3Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat2");
+			//	if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
+			//		Layer4Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat3");
 				
-			} 
+			//} 
 			if(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd BeastLM_1DC") || CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel1/T4M 2 Textures ManualAdd CustoLM 1DC")){
 				LMMan = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Lightmap");
 			}
