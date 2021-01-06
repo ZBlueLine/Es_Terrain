@@ -249,13 +249,38 @@ namespace Utility
                 splatWeight.SetPixels((i%2)*wid,(i/2)*hei,wid,hei,MySplat[i].GetPixels());
             }
             splatWeight.Apply();
-            string savePath = Application.dataPath+"/"+"Es_TerrainAtlas"+"/"+name;
+            string savePath = "Assets/"+"Es_TerrainAtlas/"+name;
             DirectoryInfo mydir = new DirectoryInfo(savePath);
             if(!mydir.Exists)
                 System.IO.Directory.CreateDirectory(savePath);
             System.IO.File.WriteAllBytes(savePath+"/splatWeight.png",splatWeight.EncodeToPNG());
             System.IO.File.WriteAllBytes(savePath+"/splatID.png",splatID.EncodeToPNG());
             AssetDatabase.Refresh();
+            Debug.Log(savePath + "/splatID.png");
+            string path1 = savePath + "/splatID.png";
+            string path2 = savePath + "/splatWeight.png";
+
+            TextureImporter TextureId = AssetImporter.GetAtPath(path1) as TextureImporter;
+            TextureImporter TextureWeight = AssetImporter.GetAtPath(path2) as TextureImporter;
+
+            TextureImporterPlatformSettings MySetting = new TextureImporterPlatformSettings();
+            MySetting.format = TextureImporterFormat.RGBA32;
+
+            Debug.Log(TextureId);
+            TextureId.SetPlatformTextureSettings(MySetting);
+            TextureId.mipmapEnabled = false;
+            TextureId.filterMode = FilterMode.Point;
+            TextureId.wrapMode = TextureWrapMode.Clamp;
+            TextureId.isReadable = true;
+
+            TextureWeight.SetPlatformTextureSettings(MySetting);
+            TextureWeight.mipmapEnabled = false;
+            TextureWeight.filterMode = FilterMode.Trilinear;
+            TextureWeight.wrapMode = TextureWrapMode.Clamp;
+            TextureWeight.isReadable = true;
+
+            AssetDatabase.ImportAsset(path1, ImportAssetOptions.ForceUpdate);
+            AssetDatabase.ImportAsset(path2, ImportAssetOptions.ForceUpdate);
         }
 
         static private float getNearWeight(Color[] colors, int index, int wid, int rgba)

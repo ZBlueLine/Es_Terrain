@@ -15,6 +15,7 @@ public class T4MSC : EditorWindow {
 		ShaderModel1,
 		ShaderModel2,
 		ShaderModel3,
+		Es_BlenderShaderModel,
 		CustomShader
 	}
 	public enum PlantMode{
@@ -120,6 +121,11 @@ public class T4MSC : EditorWindow {
 		T4M_2_Textures_Bumped_SPEC,
 		T4M_3_Textures_Bumped_SPEC,
 		T4M_4_Textures_Bumped_SPEC
+	}
+
+	enum BlenderShader{
+		blend_9Texture_shader,
+		blend_16Texture_shader
 	}
 	
 	enum LODShaderStatus{
@@ -249,6 +255,7 @@ public class T4MSC : EditorWindow {
 	EnumShaderGLES2 MenuTextureSM2 = EnumShaderGLES2.T4M_4_Textures_HighSpec;
 	EnumShaderGLES1 MenuTextureSM1 = EnumShaderGLES1.T4M_2_Textures_Auto_BeastLM_2DrawCall;
 	EnumShaderGLES3 MenuTextureSM3 = EnumShaderGLES3.T4M_4_Textures_Diffuse;
+	BlenderShader BlenderShaderSM = BlenderShader.blend_9Texture_shader;
 	SM ShaderModel = SM.ShaderModel2;
 	MaterialType MaterialTyp = MaterialType.Classic;
 	static public PlantMode T4MPlantMod = PlantMode.Classic;
@@ -3046,17 +3053,19 @@ public class T4MSC : EditorWindow {
 				ShaderModel =(SM) EditorGUILayout.EnumPopup ("Shader Model", ShaderModel, GUILayout.Width(340));
 				
 				//选择shader
-				if (ShaderModel == SM.ShaderModel1){
+				if (ShaderModel == SM.ShaderModel1)
 					MenuTextureSM1 =(EnumShaderGLES1) EditorGUILayout.EnumPopup ("Shader", MenuTextureSM1, GUILayout.Width(340));
-				}else if (ShaderModel == SM.ShaderModel2){	
+				else if (ShaderModel == SM.ShaderModel2)	
 					MenuTextureSM2 =(EnumShaderGLES2) EditorGUILayout.EnumPopup ("Shader", MenuTextureSM2, GUILayout.Width(340));
-				}else if (ShaderModel == SM.ShaderModel3)
+				else if (ShaderModel == SM.ShaderModel3)
 					MenuTextureSM3 =(EnumShaderGLES3) EditorGUILayout.EnumPopup ("Shader", MenuTextureSM3, GUILayout.Width(340));
+				else if (ShaderModel == SM.Es_BlenderShaderModel)
+						BlenderShaderSM = (BlenderShader) EditorGUILayout.EnumPopup ("Shader", BlenderShaderSM, GUILayout.Width(340));
 				else CustomShader=EditorGUILayout.ObjectField("Select your Shader",CustomShader, typeof(Shader),true, GUILayout.Width(350)) as Shader;
 				EditorGUILayout.Space();
 				
 		
-				if (ShaderModel != SM.CustomShader){
+				if (ShaderModel != SM.CustomShader && ShaderModel != SM.Es_BlenderShaderModel){
 				GUILayout.Label("Shader Compatibility", EditorStyles.boldLabel);
 						GUILayout.BeginHorizontal();
 							GUILayout.Label("GLES 1.1",GUILayout.Width(300));
@@ -3382,56 +3391,64 @@ public class T4MSC : EditorWindow {
 				
 		}
 		else if (ShaderModel == SM.ShaderModel3){
-				//Diffuse SM3
-				if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Diffuse){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 2 Textures");
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Diffuse){							
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 3 Textures");						
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Diffuse){							
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 4 Textures");						
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_5_Textures_Diffuse){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 5 Textures");
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_6_Textures_Diffuse){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 6 Textures");
-				}
+			//Diffuse SM3
+			if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Diffuse){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 2 Textures");
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Diffuse){							
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 3 Textures");						
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Diffuse){							
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 4 Textures");						
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_5_Textures_Diffuse){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 5 Textures");
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_6_Textures_Diffuse){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Diffuse/T4M 6 Textures");
+			}
 			
-				//Specular
-				else if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Specular){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Specular/T4M 2 Textures Spec");
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Specular){							
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Specular/T4M 3 Textures Spec");						
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Specular){							
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Specular/T4M 4 Textures Spec");						
-				}
-				
-				//Bumped SM3
-				else if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Bumped){			
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Bump/T4M 2 Textures Bump");		
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Bumped){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Bump/T4M 3 Textures Bump");
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Bumped){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Bump/T4M 4 Textures Bump");
-				}
-				
-				//Bump Spec SM3
-				else if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Bumped_SPEC){			
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 2 Textures Bump Spec");		
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Bumped_SPEC){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 3 Textures Bump Spec");
-				}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Bumped_SPEC){	
-					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 4 Textures Bump Spec");
-				}
+			//Specular
+			else if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Specular){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Specular/T4M 2 Textures Spec");
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Specular){							
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Specular/T4M 3 Textures Spec");						
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Specular){							
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Specular/T4M 4 Textures Spec");						
+			}
 			
-		}else{
-			Material temp  = new Material( CustomShader );
-			if (CustomShader !=null && temp.HasProperty("_Control") && temp.HasProperty("_Splat0") && temp.HasProperty("_Splat1")){
-				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader = CustomShader;
-				
-			}else EditorUtility.DisplayDialog("T4M Message", "This Shader is not compatible", "OK");
+			//Bumped SM3
+			else if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Bumped){			
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Bump/T4M 2 Textures Bump");		
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Bumped){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Bump/T4M 3 Textures Bump");
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Bumped){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/Bump/T4M 4 Textures Bump");
+			}
+			
+			//Bump Spec SM3
+			else if (MenuTextureSM3 == EnumShaderGLES3.T4M_2_Textures_Bumped_SPEC){			
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 2 Textures Bump Spec");		
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_3_Textures_Bumped_SPEC){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 3 Textures Bump Spec");
+			}else if (MenuTextureSM3 == EnumShaderGLES3.T4M_4_Textures_Bumped_SPEC){	
+				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader =  Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 4 Textures Bump Spec");
+			}
 		}
-		
-		
-		
+		else if (ShaderModel == SM.Es_BlenderShaderModel)
+		{
+			if (BlenderShaderSM == BlenderShader.blend_9Texture_shader)
+				CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.shader = Shader.Find("Es_Terrain/9 Bumped Diffuse");
+			if (BlenderShaderSM == BlenderShader.blend_16Texture_shader)
+				CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.shader = Shader.Find("Es_Terrain/16 Bumped Diffuse");
+		}
+		else
+		{
+			Material temp  = new Material( CustomShader );
+			if (CustomShader !=null && temp.HasProperty("_Control") && temp.HasProperty("_Splat0") && temp.HasProperty("_Splat1"))
+			{
+					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader = CustomShader;
+			}
+			else EditorUtility.DisplayDialog("T4M Message", "This Shader is not compatible", "OK");
+		}
+
+		CreateControl2Text("");
 		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Control2")){
 			Texture Control2;
 			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control") != null)
@@ -3473,37 +3490,6 @@ public class T4MSC : EditorWindow {
 			if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat" + myIndex))
 				CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat" + myIndex, LayerBump[i]);
 		}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0"))
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", Layer1);
-
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1"))
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", Layer2);	
-		
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", Layer3);
-		//}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", Layer4);
-		//}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", Layer5);
-		//}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", Layer6);
-		//}
-
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", Layer1Bump);
-		//}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", Layer2Bump);
-		//}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", Layer3Bump);
-		//}
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3")){
-		//	CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", Layer4Bump);
-		//}
 		if(T4MMaster){
 			CurrentSelect.GetComponent <T4MObjSC>().EnabledLODSystem = ActivatedLOD;
 			CurrentSelect.GetComponent <T4MObjSC>().enabledBillboard = ActivatedBillboard;
@@ -3564,10 +3550,6 @@ public class T4MSC : EditorWindow {
 		
 		Control.SetPixels (ColorBase);
 		string path;
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control") != null){
-		// 	path = T4MPrefabFolder+"Terrains/Texture/"+CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Control").name+"C" + Index + ".png";
-			
-		//}else 
 			path = T4MPrefabFolder+"Terrains/Texture/"+CurrentSelect.gameObject.name + "C" + Index + ".png";	
 		byte[] data = Control.EncodeToPNG ();
 		File.WriteAllBytes (path, data);
@@ -3576,8 +3558,8 @@ public class T4MSC : EditorWindow {
 		TextureImporter TextureI= AssetImporter.GetAtPath (path) as TextureImporter;
 		TextureImporterPlatformSettings MySetting = new TextureImporterPlatformSettings();
 		MySetting.format = TextureImporterFormat.RGBA32;
+
 		TextureI.SetPlatformTextureSettings(MySetting);
-		//TextureI.textureFormat = TextureImporterFormat.ARGB32;
 		TextureI.isReadable = true;
 		TextureI.anisoLevel = 9;
 		TextureI.mipmapEnabled = false;
@@ -4084,31 +4066,6 @@ public class T4MSC : EditorWindow {
 				}
 				else Layer[i] = null;
 			}
-
-			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat0")){
-			//	Layer1 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat0");
-			//	Layer1Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat0");
-			//}else Layer1 =null;
-			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat1")){
-			//	Layer2 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat1");
-			//	Layer2Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat1");
-			//}else Layer2 =null;
-			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2")){
-			//	Layer3 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat2");
-			//	Layer3Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat2");
-			//}else Layer3 =null;
-			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3")){
-			//	Layer4 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat3");
-			//	Layer4Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat3");
-			//}else Layer4 =null;
-			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4")){
-			//	Layer5 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat4");
-			//	Layer5Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat4");
-			//}else Layer5 =null;
-			//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5")){
-			//	Layer6 =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat5");
-			//	Layer6Tile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTextureScale("_Splat5");
-			//}else Layer6 =null;
 			
 			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0")){
 				Layer1Bump =CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_BumpSplat0");
@@ -4328,14 +4285,7 @@ public class T4MSC : EditorWindow {
 		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/MobileLM/T4M 4 Textures for Mobile")){
 			MenuTextureSM2 = EnumShaderGLES2.T4M_4_Textures_4_Mobile;
 			ShaderModel = SM.ShaderModel2;
-		}//else
-		//if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/MobileLM/T4M World Projection Shader_Mobile")){
-		//	MenuTextureSM2 = EnumShaderGLES2.T4M_World_Projection_Mobile;
-		//	ShaderModel = SM.ShaderModel2;
-		//	UpSideTile = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetVector ("_Tiling");
-		//	UpSideF = CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_UpSide");
-		//	BlendFac= CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetFloat ("_Blend");
-		//}
+		}
 		else
 		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/Toon/T4M 2 Textures Toon")){
 			MenuTextureSM2 = EnumShaderGLES2.T4M_2_Textures_Toon;
@@ -4356,12 +4306,8 @@ public class T4MSC : EditorWindow {
 		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/Bump/T4M 3 Textures Bumped")){
 			MenuTextureSM2 = EnumShaderGLES2.T4M_3_Textures_Bumped;
 			ShaderModel = SM.ShaderModel2;
-		}/*else
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/Bump/T4M 4 Textures Bumped")){
-			MenuTextureSM2 = EnumShaderGLES2.T4M_4_Textures_Bumped;
-			ShaderModel = SM.ShaderModel2;
-		}*/else
-		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/Bump/T4M 2 Textures Bumped Mobile")){
+		}
+		else if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel2/Bump/T4M 2 Textures Bumped Mobile")){
 			MenuTextureSM2 = EnumShaderGLES2.T4M_2_Textures_Bumped_Mobile;
 			ShaderModel = SM.ShaderModel2;
 		}else
@@ -4453,7 +4399,19 @@ public class T4MSC : EditorWindow {
 		if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader == Shader.Find("T4MShaders/ShaderModel3/BumpSpec/T4M 4 Textures Bump Spec")){
 			MenuTextureSM3 = EnumShaderGLES3.T4M_4_Textures_Bumped_SPEC;
 			ShaderModel = SM.ShaderModel3;
-		}else{
+		}
+		else if(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.shader == Shader.Find("Es_Terrain/9 Bumped Diffuse"))
+        {
+			BlenderShaderSM = BlenderShader.blend_9Texture_shader;
+			ShaderModel = SM.Es_BlenderShaderModel;
+		}
+		else if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.shader == Shader.Find("Es_Terrain/16 Bumped Diffuse"))
+		{
+			BlenderShaderSM = BlenderShader.blend_16Texture_shader;
+			ShaderModel = SM.Es_BlenderShaderModel;
+		}
+		else
+		{
 			ShaderModel = SM.CustomShader;
 			CustomShader=CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.shader;
 			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Tiling")){
