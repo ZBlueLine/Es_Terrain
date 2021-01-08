@@ -396,7 +396,7 @@ public class T4MSC : EditorWindow {
 					GUILayout.Label(AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/T4MBAN.jpg", typeof(Texture2D)) as Texture2D,GUILayout.Width(24),GUILayout.Height (582));
 				GUILayout.EndArea ();
 		GUILayout.BeginArea (new Rect (25,0,363,50));
-		GUILayout.Label("T4M SC 久久没有更新，在Unity5各种问题。故修改此版，供公司美术使用，\n版权归原作者所有！此改版问题请反馈老沙：287490904@qq.com");
+		GUILayout.Label("该插件在T4M的基础上添加了支持16张纹理，三层混合的功能。\n修复了在2019中使用时的一些问题\n版权归原作者所有！插件问题请反馈蓝线：3246327557@qq.com");
 		GUILayout.Label(AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/logo.png", typeof(Texture))as Texture);
 		GUILayout.EndArea ();
 		
@@ -2646,7 +2646,6 @@ public class T4MSC : EditorWindow {
             CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_Splat" + myIndex, Layer[selProcedural]);
             if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat" + myIndex))
             {
-				Debug.Log(myIndex);
                 GUILayout.Label((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder + "Img/TBump.jpg", typeof(Texture)));
                 LayerBump[selProcedural] = EditorGUILayout.ObjectField(LayerBump[selProcedural], typeof(Texture2D), true, GUILayout.Width(75), GUILayout.Height(75)) as Texture;
                 CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat" + myIndex, LayerBump[selProcedural]);
