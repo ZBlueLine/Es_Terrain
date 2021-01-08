@@ -4,6 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using System;
+using UndoPro;
 
 [CustomEditor(typeof(T4MObjSC))]
 [CanEditMultipleObjects]
@@ -36,7 +38,34 @@ public class T4MExtendsSC : Editor {
 	static ArrayList onPlayModeDestroyed= new ArrayList();
 	static bool saveflag = false;
 	static bool Play;
-	
+
+	struct m_Undonode
+    {
+		public Color[] Color1;
+		public Color[] Color2;
+		public Color[] Color3;
+		public Color[] Color4;
+    };
+
+	static class m_drawManager
+    {
+		static private List<m_Undonode> ColorList = new List<m_Undonode>();
+		static private int Currentinx;
+		static public void addTexStatus(m_Undonode newtex)
+        {
+			ColorList.Add(newtex);
+			Currentinx = ColorList.Count - 1;
+        }
+
+		static public void unDraw()
+		{
+			Debug.Log("Myundo!!");
+		}
+		static public void reDraw()
+		{
+			Debug.Log("Myredo!!");
+		}
+    };
 
 	void OnSceneGUI  () {
 		//Draw Texture
@@ -102,6 +131,7 @@ public class T4MExtendsSC : Editor {
 			string currentSelect = Selection.transforms[0].name;
 			if (Physics.Raycast(terrain, out raycastHit, Mathf.Infinity,layerMask)&&raycastHit.collider.name == currentSelect)
 			{
+				DateTime beforDT = System.DateTime.Now;
 				//如果类型是ut说明是从Terrain转化过来的
 				if (T4MSC.CurrentSelect.gameObject.GetComponent <T4MObjSC>().ConvertType !="UT")
 					T4MSC.T4MPreview.transform.localEulerAngles = new Vector3(90,180+T4MSC.CurrentSelect.localEulerAngles.y,0);
@@ -156,6 +186,9 @@ public class T4MExtendsSC : Editor {
 					int height = Mathf.Clamp ((PuY + T4MSC.T4MBrushSizeInPourcent / 2), 0, T4MSC.T4MMaskTex.height) - y;
 
 					//读取选中区块的颜色
+
+					Color[] terrainBay = T4MSC.T4MMaskTex.GetPixels(x, y, width, height, 0);
+
 					Color[] terrainBay2 = T4MSC.T4MMaskTex2.GetPixels(x, y, width, height, 0);
 					Color[] terrainBay3 = new Color[10];
 					Color[] terrainBay4 = new Color[10];
@@ -164,7 +197,6 @@ public class T4MExtendsSC : Editor {
 						terrainBay3 = T4MSC.T4MMaskTex3.GetPixels(x, y, width, height, 0);
 						terrainBay4 = T4MSC.T4MMaskTex4.GetPixels(x, y, width, height, 0);
 					}
-					Color[] terrainBay =  T4MSC.T4MMaskTex.GetPixels (x, y, width, height, 0);
 
 					//如果有两张权重图
 					for (int i = 0; i < height; i++) {
@@ -174,8 +206,9 @@ public class T4MExtendsSC : Editor {
 
 							//获取笔刷的a通道值
 							float Stronger= T4MSC.T4MBrushAlpha[Mathf.Clamp((y + i) - (PuY - T4MSC.T4MBrushSizeInPourcent / 2), 0, T4MSC.T4MBrushSizeInPourcent - 1)*T4MSC.T4MBrushSizeInPourcent + Mathf.Clamp((x + j) - ( PuX - T4MSC.T4MBrushSizeInPourcent / 2), 0, T4MSC.T4MBrushSizeInPourcent - 1)]* T4MSC.T4MStronger;
-							terrainBay[index] = Color.Lerp(terrainBay[index], T4MSC.T4MtargetColor,Stronger);//*0.3f);
-							if(T4MSC.T4MMaskTex2)
+							terrainBay[index] = Color.Lerp(terrainBay[index], T4MSC.T4MtargetColor, Stronger);
+							//为权重图填色
+							if (T4MSC.T4MMaskTex2)
 								terrainBay2[index] = Color.Lerp(terrainBay2[index], T4MSC.T4MtargetColor2,Stronger);///0.3f);
 							if (T4MSC.T4MMaskTex3)
 								terrainBay3[index] = Color.Lerp(terrainBay3[index], T4MSC.T4MtargetColor3, Stronger);///0.3f);
@@ -183,18 +216,22 @@ public class T4MExtendsSC : Editor {
 								terrainBay4[index] = Color.Lerp(terrainBay4[index], T4MSC.T4MtargetColor4, Stronger);///0.3f);
 						}
 					}
-					if(T4MSC.T4MMaskTex2)
+					m_Undonode newTexStatus = new m_Undonode();
+					if (T4MSC.T4MMaskTex2)
 					{
+						newTexStatus.Color2 = T4MSC.T4MMaskTex2.GetPixels();
 						T4MSC.T4MMaskTex2.SetPixels(x, y, width,height, terrainBay2, 0);
 						T4MSC.T4MMaskTex2.Apply();
 					}
 					if (T4MSC.T4MMaskTex3)
 					{
+						newTexStatus.Color3 = T4MSC.T4MMaskTex3.GetPixels();
 						T4MSC.T4MMaskTex3.SetPixels(x, y, width, height, terrainBay3, 0);
 						T4MSC.T4MMaskTex3.Apply();
 					}
 					if (T4MSC.T4MMaskTex4)
 					{
+						newTexStatus.Color4 = T4MSC.T4MMaskTex4.GetPixels();
 						T4MSC.T4MMaskTex4.SetPixels(x, y, width, height, terrainBay4, 0);
 						T4MSC.T4MMaskTex4.Apply();
 					}
@@ -211,14 +248,28 @@ public class T4MExtendsSC : Editor {
 					// 		UndoObj[0] = T4MSC.T4MMaskTex;
 					// 	}
 					// }
+					newTexStatus.Color1 = T4MSC.T4MMaskTex.GetPixels();
+					m_drawManager.addTexStatus(newTexStatus);
+
 					T4MSC.T4MMaskTex.SetPixels(x, y, width, height, terrainBay, 0);
-					T4MSC.T4MMaskTex.Apply(); //Unity don't work correctly with this for now
+					T4MSC.T4MMaskTex.Apply();
+					//Unity don't work correctly with this for now
 					//Undo.RecordObjects(UndoObj, "T4MMask");
-					ToggleF = true;	
-					
-				}else if (e.type ==  EventType.MouseUp && e.alt == false && e.button == 0 && ToggleF == true){
-                    
-					T4MSC.SaveTexture();
+					Action m_undo = m_drawManager.unDraw;
+					Action m_redo = m_drawManager.reDraw;
+					UndoProManager.RecordOperation(m_redo, m_undo, "test!");
+					ToggleF = true;
+
+					//耗时巨大的代码  
+
+					DateTime afterDT = System.DateTime.Now;
+					TimeSpan ts = afterDT.Subtract(beforDT);
+					Debug.Log("DateTime总共花费{0}ms." + ts.TotalMilliseconds);
+
+				}
+				else if (e.type ==  EventType.MouseUp && e.alt == false && e.button == 0 && ToggleF == true){
+
+					//T4MSC.SaveTexture();
 					ToggleF = false;
 				}
 			}//如果不鼠标没有在范围内
@@ -226,7 +277,8 @@ public class T4MExtendsSC : Editor {
 				DestroyImmediate(T4MSC.T4MPreview);
 		}
 	}
-	
+
+
 	//绘制植被
 	void Planting (){
 		if (State != 2)
@@ -545,7 +597,7 @@ public class T4MExtendsSC : Editor {
 	}
 	
 	void RandomRot(){
-		RandomRotation = new Vector3(Random.Range (-T4MSC.T4MrandX*45, T4MSC.T4MrandX*45),Random.Range (-T4MSC.T4MrandY*180, T4MSC.T4MrandY*180),Random.Range (-T4MSC.T4MrandZ*45, T4MSC.T4MrandZ*45));
+		RandomRotation = new Vector3(UnityEngine.Random.Range (-T4MSC.T4MrandX*45, T4MSC.T4MrandX*45),UnityEngine.Random.Range (-T4MSC.T4MrandY*180, T4MSC.T4MrandY*180),UnityEngine.Random.Range (-T4MSC.T4MrandZ*45, T4MSC.T4MrandZ*45));
 		if(PlantObjPreview){
 			PlantObjPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, Vector3.zero);
 			PlantObjPreview.transform.Rotate(RandomRotation);
@@ -553,7 +605,7 @@ public class T4MExtendsSC : Editor {
 	}
 	
 	void RandomObject (){
-		int SelObj = Random.Range (1, T4MSC.T4MselectObj+1);
+		int SelObj = UnityEngine.Random.Range (1, T4MSC.T4MselectObj+1);
 		int MatchSel=0;
 		for (int i=0;i<T4MSC.T4MBoolObj.Length;i++){
 			if (T4MSC.T4MObjectPlant[i]){	
@@ -570,7 +622,7 @@ public class T4MExtendsSC : Editor {
 	void RandomSize(){
 		
 		if(PlantObjPreview){
-			float Var = Random.Range (-T4MSC.T4MSizeVar, T4MSC.T4MSizeVar);
+			float Var = UnityEngine.Random.Range (-T4MSC.T4MSizeVar, T4MSC.T4MSizeVar);
 			
 			
 			float variation = T4MSC.T4MObjSize*Var;
@@ -583,7 +635,7 @@ public class T4MExtendsSC : Editor {
 	}
 	
 	void RandomDist(){
-		RandomDistance = Random.Range(T4MSC.T4MDistanceMin, T4MSC.T4MDistanceMax);
+		RandomDistance = UnityEngine.Random.Range(T4MSC.T4MDistanceMin, T4MSC.T4MDistanceMax);
 	}
 	
 	

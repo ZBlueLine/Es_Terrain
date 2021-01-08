@@ -2,7 +2,7 @@
 {
     Properties{
         _BlockMainTex("Block MainTexture", 2D) = "white" {}
-        _NormalTex("Normal Texture", 2D) = "white"
+        _NormalTex("Normal Texture", 2D) = "bump" {}
         _WeightTex("Weight Texture", 2D) = "white" {}
         _IDTex("ID Texture", 2D) = "white" {}
         _Color("Color", Color) = (1, 1, 1, 1)
@@ -21,6 +21,8 @@
             sampler2D _BlockMainTex;
             sampler2D _WeightTex;
             sampler2D _IDTex;
+            sampler2D _NormalTex;
+
             float4 _IDTex_ST;
             float4 _WeightTex_ST;
             
@@ -30,14 +32,17 @@
             struct a2v{
                 float4 texcoord : TEXCOORD0;
                 float4 vertex : POSITION;
+                float4 tangent : TANGENT;
                 float3 normal : NORMAL;
             };
             struct v2f{
                 float4 pos : SV_POSITION;
-                float3 normal : NORMAL;
                 float2 uv : TEXCOORD0;
                 float4 worldpos : TEXCOORD1;
                 float2 uvw : TEXCOORD2;
+                float4 TtoW0 : TEXCOORD3;
+                float4 TtoW1 : TEXCOORD4;
+                float4 TtoW2 : TEXCOORD5;
             };
 
             v2f vert(a2v v)
@@ -45,9 +50,18 @@
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.worldpos = mul(unity_ObjectToWorld, v.vertex);
-                o.normal = UnityObjectToWorldNormal(v.normal);
                 o.uv = v.texcoord.xy * _IDTex_ST.xy + _IDTex_ST.zw;
                 o.uvw = v.texcoord.xy * _WeightTex_ST.xy + _WeightTex_ST.zw;
+
+                fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);
+                fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
+                fixed3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w;
+
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+
+                o.TtoW0 = float4(worldTangent.x, worldBinormal.x, worldNormal.x, worldPos.x);
+                o.TtoW1 = float4(worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y);
+                o.TtoW2 = float4(worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z);
                 return o;
             }
 
@@ -78,10 +92,7 @@
                 idy = id0 / 4 / 2;
 
                 float Weight0 = 1 - Weight1 - Weight2;
-                /*Weight = tex2D(_WeightTex, i.uvw + float2(idx * 0.5, idy * 0.5));
-                float Weight0 = getChannelValue(Weight, id0 % 4);*/
-                
-                // return fixed4(Weight1, Weight2, Weight3, 1.0);
+
                 float2 worldScale = i.worldpos.xz * _BlockScale;
                 float2 worldUv = 0.248046875 * frac(worldScale) + 0.0009765625;
 
@@ -96,10 +107,18 @@
                 float4 col1 = tex2D(_BlockMainTex, uv1, dx, dy);
                 float4 col2 = tex2D(_BlockMainTex, uv2, dx, dy);
 
+
+                float3 normal0 = UnpackNormal(tex2D(_NormalTex, uv0, dx, dy));
+                float3 normal1 = UnpackNormal(tex2D(_NormalTex, uv1, dx, dy));
+
+                float3 normal = normal0 * Weight0 + normal1 * Weight2;
                 float4 diffuseColor = col0 * Weight0 + col1 * Weight1 + col2 * Weight2;
 
-                fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.rgb * _Color.rgb;
-                fixed3 diffuse = _LightColor0.rgb * diffuseColor.rgb * max(0, dot(i.normal, worldSpaceLightDir));
+                normal = normalize(half3(dot(i.TtoW0.xyz, normal), dot(i.TtoW1.xyz, normal), dot(i.TtoW2.xyz, normal)));
+
+                fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.rgb;// *_Color.rgb;
+                fixed3 diffuse = _LightColor0.rgb * diffuseColor.rgb * max(0, dot(normal, worldSpaceLightDir));
+
                 return fixed4(diffuse, 1.0);
             }
             ENDCG
