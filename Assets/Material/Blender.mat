@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BlockMainTex:
-        m_Texture: {fileID: 2800000, guid: 0149de220969d80479050948cbd7e2a7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6974267a9eaf1494fa6f02b8afc5f7a0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IDTex:
-        m_Texture: {fileID: 2800000, guid: 14c09e24d34f34443923e64e16c8b83f, type: 3}
+        m_Texture: {fileID: 2800000, guid: f20714a9eded61c46bbfa42e0737d21c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _WeightTex:
-        m_Texture: {fileID: 2800000, guid: 5baf0621940037b46a9daaeef91a796a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 52af84e575441324c87c8b20bc4019df, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -90,5 +90,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.93725497, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.49803925, g: 0.49803925, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

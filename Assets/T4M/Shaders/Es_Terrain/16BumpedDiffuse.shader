@@ -161,7 +161,9 @@ Shader "Es_Terrain/16 Bumped Diffuse" {
 
 			fixed4 frag(v2f i) : SV_Target {
 				float3 worldPos = float3(i.TtoW0.w, i.TtoW1.w, i.TtoW2.w);
+
 				fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
+
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
 				fixed4 Cid1 = _Control.Sample(sampler_Control, i.uv.xy);

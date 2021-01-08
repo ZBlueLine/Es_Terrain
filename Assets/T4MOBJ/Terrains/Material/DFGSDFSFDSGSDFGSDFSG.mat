@@ -104,7 +104,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat0:
-        m_Texture: {fileID: 2800000, guid: 51559c23068ec9448b9a1a928bcda551, type: 3}
+        m_Texture: {fileID: 2800000, guid: a04369ef803f8cd48bfad211841f4bd3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat1:
@@ -112,27 +112,27 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat10:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 01c0db050e5aee94c9bdf1912d67a898, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat11:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 365c030679a445e46b8b9f9cf84b7a49, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat12:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9ef3a42e48623eb47831d4c35513e759, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat13:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: e8d101715ed413d45bc9aa46d4d7eca1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat14:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8aeea5359c6dde948b2ada99f67e1bfd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat15:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 630499ab1c1c01940b86b03378d9a38c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat2:
@@ -152,19 +152,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat6:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3721079352d7df8428661dc72d649c3e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat7:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: cd3e849c272e36a428bff0643581fded, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat8:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 14385a354bb33ba488d19f05dbf9e942, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat9:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 136c620988f2a3c498f15b9a5a93bb48, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats: []
