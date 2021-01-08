@@ -281,7 +281,7 @@ public class T4MSC : EditorWindow {
 	string T4MPrefabFolder = "Assets/T4MOBJ/";
 	string FinalExpName;
 	static public float T4MMaskTexUVCoord =1f;
-	
+
 	Shader CustomShader;
 	float shiness0;
 	float shiness1;
@@ -1613,7 +1613,7 @@ public class T4MSC : EditorWindow {
 	}
 	
 	static public void SaveTexture()
-	{
+	{	
 		var path = AssetDatabase.GetAssetPath (T4MMaskTex);
 		var bytes   = T4MMaskTex.EncodeToPNG ();
 		File.WriteAllBytes (path, bytes);

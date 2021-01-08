@@ -6,6 +6,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using UndoPro;
+using UtilStruct;
 
 [CustomEditor(typeof(T4MObjSC))]
 [CanEditMultipleObjects]
@@ -39,38 +40,79 @@ public class T4MExtendsSC : Editor {
 	static bool saveflag = false;
 	static bool Play;
 
-	struct m_Undonode
-    {
-		public Color[] Color1;
-		public Color[] Color2;
-		public Color[] Color3;
-		public Color[] Color4;
-    };
 
 	static class m_drawManager
-    {
-		static private List<m_Undonode> ColorList = new List<m_Undonode>();
-		static private int Currentinx;
-		static public void addTexStatus(m_Undonode newtex)
+	{
+		static public int height { get; set; }
+		static public int width { get; set; }
+		static public T4MObjSC CurrentSelect;
+		static public void addTexStatus(UtilStruct.m_UndoNode newtex)
         {
-			ColorList.Add(newtex);
-			Currentinx = ColorList.Count - 1;
-        }
+			CurrentSelect = T4MSC.CurrentSelect.GetComponent<T4MObjSC>();
+			if (CurrentSelect.ColorList.Count == 0) CurrentSelect.Currentinx = -1;
+			if (CurrentSelect.Currentinx > -1)
+				CurrentSelect.ColorList.RemoveRange(CurrentSelect.Currentinx + 1, CurrentSelect.ColorList.Count - CurrentSelect.Currentinx - 1);
+			CurrentSelect.ColorList.Add(newtex);
+			CurrentSelect.Currentinx = CurrentSelect.ColorList.Count - 1;
+		}
 
 		static public void unDraw()
 		{
-			Debug.Log("Myundo!!");
+			Debug.Log(CurrentSelect.Currentinx + "un");
+			Debug.Log(CurrentSelect.ColorList.Count + "Count");
+			if (CurrentSelect.Currentinx == 0) return;
+			T4MSC.T4MMaskTex.SetPixels(CurrentSelect.ColorList[--CurrentSelect.Currentinx].Color1);
+			
+			T4MSC.T4MMaskTex.Apply();
+			if (T4MSC.T4MMaskTex2)
+			{
+				T4MSC.T4MMaskTex2.SetPixels(CurrentSelect.ColorList[CurrentSelect.Currentinx].Color2);
+				T4MSC.T4MMaskTex2.Apply();
+			}
+			if (T4MSC.T4MMaskTex3)
+			{
+				T4MSC.T4MMaskTex3.SetPixels(CurrentSelect.ColorList[CurrentSelect.Currentinx].Color3);
+				T4MSC.T4MMaskTex3.Apply();
+			}
+			if (T4MSC.T4MMaskTex4)
+			{
+				T4MSC.T4MMaskTex4.SetPixels(CurrentSelect.ColorList[CurrentSelect.Currentinx].Color4);
+				T4MSC.T4MMaskTex4.Apply();
+			}
 		}
 		static public void reDraw()
 		{
-			Debug.Log("Myredo!!");
+			Debug.Log(CurrentSelect.Currentinx);
+			Debug.Log(CurrentSelect.ColorList.Count + "Count");
+			if (CurrentSelect.Currentinx > CurrentSelect.ColorList.Count - 2) return;
+
+			T4MSC.T4MMaskTex.SetPixels(CurrentSelect.ColorList[++CurrentSelect.Currentinx].Color1);
+			T4MSC.T4MMaskTex.Apply();
+			if (T4MSC.T4MMaskTex2)
+			{
+				T4MSC.T4MMaskTex2.SetPixels(CurrentSelect.ColorList[CurrentSelect.Currentinx].Color2);
+				T4MSC.T4MMaskTex2.Apply();
+			}
+			if (T4MSC.T4MMaskTex3)
+			{
+				T4MSC.T4MMaskTex3.SetPixels(CurrentSelect.ColorList[CurrentSelect.Currentinx].Color3);
+				T4MSC.T4MMaskTex3.Apply();
+			}
+			if (T4MSC.T4MMaskTex4)
+			{
+				T4MSC.T4MMaskTex4.SetPixels(CurrentSelect.ColorList[CurrentSelect.Currentinx].Color4);
+				T4MSC.T4MMaskTex4.Apply();
+			}
 		}
     };
 
 	void OnSceneGUI  () {
 		//Draw Texture
 		if (T4MSC.T4MPreview && T4MSC.T4MMenuToolbar == 3)
+        {
+			m_drawManager.CurrentSelect = T4MSC.CurrentSelect.GetComponent<T4MObjSC>();
 			Painter();
+		}
 		//Draw the vegetation
 		else if (T4MSC.T4MMenuToolbar == 4)
 			Planting ();
@@ -92,7 +134,8 @@ public class T4MExtendsSC : Editor {
 		
 	}
 	//绘制纹理
-	void Painter (){
+	void Painter ()
+	{
 		if (State != 1)
 			State = 1;
 		Event e  = Event.current;
@@ -216,25 +259,39 @@ public class T4MExtendsSC : Editor {
 								terrainBay4[index] = Color.Lerp(terrainBay4[index], T4MSC.T4MtargetColor4, Stronger);///0.3f);
 						}
 					}
-					m_Undonode newTexStatus = new m_Undonode();
 					if (T4MSC.T4MMaskTex2)
 					{
-						newTexStatus.Color2 = T4MSC.T4MMaskTex2.GetPixels();
 						T4MSC.T4MMaskTex2.SetPixels(x, y, width,height, terrainBay2, 0);
 						T4MSC.T4MMaskTex2.Apply();
 					}
 					if (T4MSC.T4MMaskTex3)
 					{
-						newTexStatus.Color3 = T4MSC.T4MMaskTex3.GetPixels();
 						T4MSC.T4MMaskTex3.SetPixels(x, y, width, height, terrainBay3, 0);
 						T4MSC.T4MMaskTex3.Apply();
 					}
 					if (T4MSC.T4MMaskTex4)
 					{
-						newTexStatus.Color4 = T4MSC.T4MMaskTex4.GetPixels();
 						T4MSC.T4MMaskTex4.SetPixels(x, y, width, height, terrainBay4, 0);
 						T4MSC.T4MMaskTex4.Apply();
 					}
+					if (m_drawManager.CurrentSelect.ColorList == null)
+						m_drawManager.CurrentSelect.ColorList = new List<m_UndoNode>();
+
+					if (m_drawManager.CurrentSelect.ColorList.Count == 0)
+					{
+						m_drawManager.height = T4MSC.T4MMaskTex.height;
+						m_drawManager.width = T4MSC.T4MMaskTex.width;
+						m_UndoNode newTexStatus = new m_UndoNode();
+						newTexStatus.Color1 = T4MSC.T4MMaskTex.GetPixels();
+						if (T4MSC.T4MMaskTex2)
+							newTexStatus.Color2 = T4MSC.T4MMaskTex2.GetPixels();
+						if (T4MSC.T4MMaskTex3)
+							newTexStatus.Color3 = T4MSC.T4MMaskTex3.GetPixels();
+						if (T4MSC.T4MMaskTex4)
+							newTexStatus.Color4 = T4MSC.T4MMaskTex4.GetPixels();
+						m_drawManager.addTexStatus(newTexStatus);
+					}
+
 					//这里修改的是Mask贴图也就是权重图，画面上的效果是通过shader读取权重图来显示的
 					// if(UndoObj == null)
 					// {
@@ -248,8 +305,6 @@ public class T4MExtendsSC : Editor {
 					// 		UndoObj[0] = T4MSC.T4MMaskTex;
 					// 	}
 					// }
-					newTexStatus.Color1 = T4MSC.T4MMaskTex.GetPixels();
-					m_drawManager.addTexStatus(newTexStatus);
 
 					T4MSC.T4MMaskTex.SetPixels(x, y, width, height, terrainBay, 0);
 					T4MSC.T4MMaskTex.Apply();
@@ -264,15 +319,26 @@ public class T4MExtendsSC : Editor {
 
 					DateTime afterDT = System.DateTime.Now;
 					TimeSpan ts = afterDT.Subtract(beforDT);
-					Debug.Log("DateTime总共花费{0}ms." + ts.TotalMilliseconds);
+					//Debug.Log("DateTime总共花费{0}ms." + ts.TotalMilliseconds);
 
 				}
-				else if (e.type ==  EventType.MouseUp && e.alt == false && e.button == 0 && ToggleF == true){
-
-					//T4MSC.SaveTexture();
+                else if (e.type == EventType.MouseUp && e.alt == false && e.button == 0 && ToggleF == true)
+				{
+					m_drawManager.height = T4MSC.T4MMaskTex.height;
+					m_drawManager.width = T4MSC.T4MMaskTex.width;
+					m_UndoNode newTexStatus = new m_UndoNode();
+					newTexStatus.Color1 = T4MSC.T4MMaskTex.GetPixels();
+					if (T4MSC.T4MMaskTex2)
+						newTexStatus.Color2 = T4MSC.T4MMaskTex2.GetPixels();
+					if (T4MSC.T4MMaskTex3)
+						newTexStatus.Color3 = T4MSC.T4MMaskTex3.GetPixels();
+					if (T4MSC.T4MMaskTex4)
+						newTexStatus.Color4 = T4MSC.T4MMaskTex4.GetPixels();
+					m_drawManager.addTexStatus(newTexStatus);
+					//	T4MSC.SaveTexture();
 					ToggleF = false;
-				}
-			}//如果不鼠标没有在范围内
+                }
+            }//如果不鼠标没有在范围内
 			else
 				DestroyImmediate(T4MSC.T4MPreview);
 		}

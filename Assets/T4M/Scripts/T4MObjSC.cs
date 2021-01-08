@@ -1,6 +1,8 @@
 //Update SC
 using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
+using UtilStruct;
 [ExecuteInEditMode]
 public class T4MObjSC : MonoBehaviour {
 	[HideInInspector] 
@@ -76,7 +78,12 @@ public class T4MObjSC : MonoBehaviour {
 	public bool LayerCullPreview = false;
 	public bool LODPreview = false;
 	public bool BillboardPreview = false;
-	
+
+	[HideInInspector]
+	public List<m_UndoNode> ColorList;
+
+	public int Currentinx;
+
 	public void Awake()
 	{
 		if (Master ==1){
