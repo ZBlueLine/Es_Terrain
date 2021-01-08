@@ -1631,6 +1631,22 @@ public class T4MSC : EditorWindow {
 		if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat8"))
 		{
 			TexTexture = new Texture[16];
+			TexTexture[0] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat0")) as Texture;
+			TexTexture[1] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat1")) as Texture;
+			TexTexture[2] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat2")) as Texture;
+			TexTexture[3] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat3")) as Texture;
+			TexTexture[4] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat4")) as Texture;
+			TexTexture[5] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat5")) as Texture;
+			TexTexture[6] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat6")) as Texture;
+			TexTexture[7] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat7")) as Texture;
+			TexTexture[8] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat8")) as Texture;
+			TexTexture[9] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat9")) as Texture;
+			TexTexture[10] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat10")) as Texture;
+			TexTexture[11] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat11")) as Texture;
+			TexTexture[12] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat12")) as Texture;
+			TexTexture[13] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat13")) as Texture;
+			TexTexture[14] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat14")) as Texture;
+			TexTexture[15] = AssetPreview.GetAssetPreview(CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.GetTexture("_Splat15")) as Texture;
 		}
 		else if (CurrentSelect.gameObject.GetComponent<T4MObjSC>().T4MMaterial.HasProperty("_Splat6"))
 		{
@@ -2555,122 +2571,11 @@ public class T4MSC : EditorWindow {
 				////这段是添加纹理
 					//GUILayout.Label("Add / Replace / Substances Update" , EditorStyles.boldLabel);
 					EditorGUILayout.BeginVertical("box");
-				//		EditorGUILayout.BeginHorizontal();
-				//			GUILayout.Label("",GUILayout.Width(3));
-				//			 if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) 
-				//			 {
-				//				if (!PreceduralAdd && !MaterialAdd && Precedural)
-				//					PreceduralAdd = Precedural;
-					
-				//					if (PreceduralAdd){
-				//					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", PreceduralAdd.GetInputTexture("_MainTex"));
-				//					if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat0"))
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat0", PreceduralAdd.GetInputTexture ("_BumpMap"));
-				//					}else if (MaterialAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat0", MaterialAdd);
-				//					}
-				//					selProcedural = 0;
-				//					PreceduralAdd = null;
-				//					MaterialAdd=null;
-				//					IniNewSelect();
-				//			 }
-				//			if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-				//				if (!PreceduralAdd && !MaterialAdd && Precedural)
-				//					PreceduralAdd = Precedural;
-				//				if (PreceduralAdd){
-				//				CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", PreceduralAdd.GetInputTexture ("_MainTex"));
-				//				if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat1"))
-				//					CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat1", PreceduralAdd.GetInputTexture ("_BumpMap"));
-				//				}else if (MaterialAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat1", MaterialAdd);
-				//					}
-				//					selProcedural = 1;
-				//					PreceduralAdd = null;
-				//					MaterialAdd=null;
-				//					IniNewSelect();
-				//			}
-				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat2"))
-				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
-				//					PreceduralAdd = Precedural;
-				//					if (PreceduralAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", PreceduralAdd.GetInputTexture ("_MainTex"));
-				//						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat2"))
-				//							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat2", PreceduralAdd.GetInputTexture ("_BumpMap"));
-				//					}else if (MaterialAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat2", MaterialAdd);
-				//					}
-				//					selProcedural = 2;
-				//					PreceduralAdd = null;
-				//					MaterialAdd=null;
-				//					IniNewSelect();
-				//				}
-				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat3"))
-				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
-				//					PreceduralAdd = Precedural;
-				//					if (PreceduralAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", PreceduralAdd.GetInputTexture ("_MainTex"));
-				//						if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_BumpSplat3"))
-				//							CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_BumpSplat3", PreceduralAdd.GetInputTexture ("_BumpMap"));
-				//					}else if (MaterialAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat3", MaterialAdd);
-				//					}
-				//					selProcedural = 3;
-				//					PreceduralAdd = null;
-				//					MaterialAdd=null;
-				//					IniNewSelect();
-				//				}
-				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat4"))
-				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
-				//					PreceduralAdd = Precedural;
-					
-				//					if (PreceduralAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", PreceduralAdd.GetInputTexture ("_MainTex"));
-				//					}else if (MaterialAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat4", MaterialAdd);
-				//					}
-				//					selProcedural = 4;
-				//					PreceduralAdd = null;
-				//					MaterialAdd=null;
-				//					IniNewSelect();
-				//				}
-				//			if (CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.HasProperty("_Splat5"))
-				//				if(GUILayout.Button ((Texture)AssetDatabase.LoadAssetAtPath(T4MEditorFolder+"Img/up.png", typeof(Texture)),GUILayout.Width(53))) {
-				//					if (!PreceduralAdd && !MaterialAdd && Precedural)
-				//					PreceduralAdd = Precedural;
-					
-				//					if (PreceduralAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", PreceduralAdd.GetInputTexture ("_MainTex"));
-				//				}else if (MaterialAdd){
-				//						CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.SetTexture("_Splat5", MaterialAdd);
-				//				}
-				//				selProcedural = 5;
-				//				PreceduralAdd = null;
-				//				MaterialAdd=null;
-				//				IniNewSelect();
-				//			}
-						
-				//		EditorGUILayout.EndHorizontal();
 				
 				
 					string AssetName= AssetDatabase.GetAssetPath(CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural)) as string;
 
-					// Substance.Game.Substance substance = AssetDatabase.LoadAssetAtPath(AssetName, typeof(Substance.Game.Substance)) as Substance.Game.Substance;
-					// if (substance)
-					// {
 					
-				 	// 	List<SubstanceGraph> ProcMat = substance.graphs as List<SubstanceGraph>;
-					
-					// 	for (int i = 0; i<ProcMat.Count;i++){
-					// 		if (ProcMat[i].name+"_Diffuse" == CurrentSelect.gameObject.GetComponent <T4MObjSC>().T4MMaterial.GetTexture("_Splat"+selProcedural).name){
-					// 			Precedural = ProcMat[i];
-					// 			//SubstanceI.SetTextureAlphaSource(Precedural, Precedural.name+"_Diffuse", ProceduralOutputType.Diffuse);
-					// 		}
-					// 	}
-					// }else Precedural = null;
-				
 					EditorGUILayout.Space();
 					EditorGUILayout.Space();
 				
@@ -2678,17 +2583,6 @@ public class T4MSC : EditorWindow {
 					MaterialTyp =(MaterialType) EditorGUILayout.EnumPopup ("Material Type", MaterialTyp, GUILayout.Width(340));
 					EditorGUILayout.BeginHorizontal();
 					
-					// if (MaterialTyp != MaterialType.Classic){
-					// 	GUILayout.Label("Substances To Add : ");
-					// 	MaterialAdd = null;
-					// 	PreceduralAdd = EditorGUILayout.ObjectField(PreceduralAdd, typeof(SubstanceGraph),true, GUILayout.Width(220)) as SubstanceGraph;
-					// }
-					// else
-					// { 
-					// 	GUILayout.Label("Texture To Add : ");
-					// 	PreceduralAdd = null;
-					// 	MaterialAdd = EditorGUILayout.ObjectField(MaterialAdd, typeof(Texture2D),true, GUILayout.Width(220)) as Texture;
-					// }
 
 				
 					GUILayout.FlexibleSpace();
